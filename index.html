@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>肌少症知信行健康助手 · 健康管理师小李</title>
+<style>
+/* ==================== 全局基础 ==================== */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --primary:#E8734A; --primary-grad:linear-gradient(135deg,#FF9A6C 0%,#E8734A 100%);
+  --primary-light:#FFF3ED; --primary-dark:#C95A35;
+  --green:#4CAF7D; --green-light:#E8F5EE;
+  --yellow:#E8A93A; --yellow-light:#FFF8E8;
+  --red:#D9534F; --red-light:#FDECEB;
+  --bg:#F7F5F0; --card:#FFFFFF;
+  --text:#3D3A36; --text-light:#8A857E; --border:#E8E4DD;
+  --shadow:0 4px 20px rgba(232,115,74,0.10);
+  font-size:17px; /* 默认中号字体（rem 基准） */
+}
+html.fs-sm{font-size:15px;} /* 小号 */
+html.fs-lg{font-size:20px;} /* 大号——老人友好 */
+html,body{height:100%;}
+body{font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;overflow:hidden;position:relative;}
+.bg-blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.4;pointer-events:none;z-index:0;}
+.bg-blob.b1{width:320px;height:320px;background:#FFD9C4;top:-100px;right:-80px;}
+.bg-blob.b2{width:260px;height:260px;background:#D9E8FF;bottom:40px;left:-90px;}
+.bg-blob.b3{width:200px;height:200px;background:#FFE9B8;top:40%;right:-70px;opacity:.3;}
+button{font-family:inherit;}
+/* ==================== 顶部栏 ==================== */
+header{background:var(--primary-grad);padding:.8rem 1rem .9rem;display:flex;align-items:center;gap:.8rem;flex-shrink:0;position:relative;z-index:2;box-shadow:0 4px 18px rgba(232,115,74,.28);}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-.8rem;height:.8rem;background:var(--bg);border-radius:1rem 1rem 0 0;}
+.doctor-wrap{width:3.4rem;height:3.4rem;flex-shrink:0;background:rgba(255,255,255,.25);border-radius:50%;padding:3px;animation:floatY 3.5s ease-in-out infinite;}
+@keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+.doctor-wrap svg{width:100%;height:100%;display:block;}
+.header-text h1{font-size:1.15rem;font-weight:700;color:#fff;letter-spacing:.5px;}
+.header-text p{font-size:.75rem;color:rgba(255,255,255,.88);margin-top:3px;}
+/* 字体三档切换 */
+.font-switch{margin-left:auto;display:flex;gap:4px;background:rgba(255,255,255,.22);padding:4px;border-radius:1.2rem;border:1px solid rgba(255,255,255,.35);}
+.fs-btn{border:none;background:transparent;color:#fff;font-size:.78rem;padding:.2rem .6rem;border-radius:1rem;cursor:pointer;transition:all .2s;}
+.fs-btn.active{background:#fff;color:var(--primary-dark);font-weight:700;}
+/* ==================== 通用视图 ==================== */
+.view{flex:1;display:flex;flex-direction:column;min-height:0;position:relative;z-index:1;}
+.view[hidden]{display:none;}
+.topbar{display:flex;gap:.5rem;padding:.6rem 1rem 0;flex-shrink:0;}
+.topbar-btn{border:1px solid var(--border);background:var(--card);color:var(--text-light);font-size:.85rem;padding:.3rem .8rem;border-radius:1.2rem;cursor:pointer;box-shadow:var(--shadow);transition:.2s;}
+.topbar-btn:active{transform:scale(.95);}
+/* ==================== 首页 ==================== */
+.home-scroll{flex:1;overflow-y:auto;padding:1.2rem 1.1rem 1rem;}
+.home-hero{text-align:center;margin:.4rem 0 1.4rem;}
+.hero-avatar{width:5.6rem;height:5.6rem;margin:0 auto .7rem;background:var(--primary-light);border-radius:50%;padding:6px;box-shadow:var(--shadow);}
+.hero-avatar svg{width:100%;height:100%;}
+.home-hero h2{font-size:1.25rem;font-weight:700;}
+.home-hero p{font-size:.92rem;color:var(--text-light);line-height:1.7;margin-top:.5rem;max-width:30rem;margin-left:auto;margin-right:auto;}
+.awg-badge{display:inline-block;margin-top:.6rem;font-size:.72rem;color:var(--primary-dark);background:var(--primary-light);padding:.25rem .9rem;border-radius:1rem;border:1px solid #F5C9B0;}
+.home-cards{display:flex;flex-direction:column;gap:1rem;max-width:30rem;margin:0 auto;}
+.home-card{background:var(--card);border-radius:1.2rem;padding:1.3rem 1.2rem;cursor:pointer;box-shadow:var(--shadow);border:1px solid var(--border);transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden;}
+.home-card:active{transform:scale(.98);}
+.home-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--primary-grad);}
+.home-card.green::before{background:linear-gradient(135deg,#7FD3A3,#4CAF7D);}
+.hc-icon{font-size:2rem;margin-bottom:.4rem;}
+.home-card h3{font-size:1.08rem;font-weight:700;color:var(--text);}
+.home-card p{font-size:.88rem;color:var(--text-light);line-height:1.65;margin-top:.35rem;}
+.hc-btn{display:inline-block;margin-top:.7rem;font-size:.86rem;font-weight:700;color:var(--primary-dark);}
+.home-card.green .hc-btn{color:var(--green);}
+.home-tags{display:flex;justify-content:center;gap:.6rem;margin:1.4rem 0 .2rem;flex-wrap:wrap;}
+.home-tags span{font-size:.78rem;color:var(--text-light);background:var(--card);border:1px solid var(--border);padding:.3rem .8rem;border-radius:1rem;}
+/* ==================== 进度条 ==================== */
+.progress-steps{display:flex;align-items:center;justify-content:center;gap:4px;padding:.7rem 1rem .3rem;flex-shrink:0;flex-wrap:nowrap;overflow-x:auto;}
+.step{display:flex;align-items:center;flex-shrink:0;}
+.step-dot{width:1.55rem;height:1.55rem;border-radius:50%;background:#E5E1DA;color:var(--text-light);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.step.active .step-dot{background:var(--primary-grad);color:#fff;transform:scale(1.15);box-shadow:0 3px 10px rgba(232,115,74,.4);}
+.step.done .step-dot{background:var(--green);color:#fff;}
+.step-line{width:.9rem;height:3px;background:#E5E1DA;margin:0 3px;border-radius:2px;}
+.step.done+.step .step-line,.step-line.done{background:var(--green);}
+/* ==================== 聊天区 ==================== */
+#chat-area{flex:1;overflow-y:auto;padding:.8rem 1rem 1rem;scroll-behavior:smooth;}
+.msg{display:flex;gap:.55rem;margin:.8rem 0;animation:msgIn .3s ease;}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.msg.user{flex-direction:row-reverse;}
+.avatar{width:2.5rem;height:2.5rem;border-radius:50%;flex-shrink:0;background:var(--card);overflow:hidden;border:2px solid var(--card);box-shadow:var(--shadow);}
+.avatar svg{width:100%;height:100%;display:block;}
+.bubble{position:relative;max-width:78%;padding:.75rem .95rem;border-radius:1.1rem;font-size:1rem;line-height:1.75;white-space:pre-line;word-break:break-word;}
+.msg.ai .bubble{background:var(--card);border:1px solid var(--border);border-top-left-radius:.3rem;box-shadow:var(--shadow);}
+.msg.user .bubble{background:var(--primary-grad);color:#fff;border-top-right-radius:.3rem;}
+/* 语音播报按钮（每条AI消息右上角） */
+.speak-btn{position:absolute;top:-.55rem;right:-.3rem;width:1.7rem;height:1.7rem;border-radius:50%;border:1px solid var(--border);background:var(--card);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);transition:.2s;z-index:2;}
+.speak-btn:active{transform:scale(.9);}
+.speak-btn.speaking{background:var(--primary);border-color:var(--primary);}
+/* 引导提示 */
+.guide-hint{display:flex;align-items:center;gap:.4rem;margin:.5rem 0 .2rem;padding:0 .3rem;font-size:.8rem;color:var(--text-light);}
+.guide-hint::before{content:"👆";font-size:.95rem;}
+/* 欢迎横幅 */
+.welcome-banner{background:linear-gradient(135deg,var(--primary-light),#FFF8F0);border:1px solid #F5C9B0;border-radius:1.2rem;padding:1.1rem 1.2rem;margin:.6rem 0 .2rem;box-shadow:var(--shadow);}
+.welcome-banner h3{font-size:1.08rem;font-weight:700;color:var(--primary-dark);}
+.welcome-banner p{font-size:.9rem;color:var(--text-light);line-height:1.7;margin-top:.4rem;}
+.welcome-tags{display:flex;gap:.45rem;margin-top:.7rem;flex-wrap:wrap;}
+.welcome-tags span{font-size:.74rem;padding:.25rem .7rem;border-radius:1rem;background:#fff;border:1px solid #F0D9C8;color:var(--primary-dark);}
+/* 打字动画 */
+.typing{display:flex;gap:5px;padding:.9rem 1rem;}
+.typing span{width:7px;height:7px;background:var(--primary);border-radius:50%;animation:blink 1.4s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;}
+.typing span:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,60%,100%{opacity:.3;transform:translateY(0);}30%{opacity:1;transform:translateY(-4px);}}
+/* 风险结果卡片 */
+.risk-card{border-radius:1.2rem;padding:1.1rem 1.2rem;margin:.8rem 0 .4rem;box-shadow:var(--shadow);border:2px solid transparent;}
+.risk-card.high{background:var(--red-light);border-color:#F0B6B4;}
+.risk-card.medium{background:var(--yellow-light);border-color:#EBD49A;}
+.risk-card.low{background:var(--green-light);border-color:#B9DFC9;}
+.risk-title{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:.5rem;}
+.risk-card.high .risk-title{color:var(--red);}
+.risk-card.medium .risk-title{color:var(--yellow);}
+.risk-card.low .risk-title{color:var(--green);}
+.risk-sub{font-size:.88rem;color:var(--text-light);margin-top:.4rem;line-height:1.7;}
+.risk-items{margin-top:.7rem;font-size:.88rem;line-height:1.8;}
+.risk-items div{padding:.15rem 0;border-bottom:1px dashed rgba(0,0,0,.08);}
+.risk-items div:last-child{border-bottom:none;}
+.risk-advice{margin-top:.7rem;font-size:.86rem;line-height:1.7;background:rgba(255,255,255,.7);border-radius:.7rem;padding:.6rem .8rem;}
+.risk-card.high .risk-advice{color:var(--red);font-weight:600;}
+/* 一键直达干预 */
+.goto-care{display:block;width:100%;margin-top:.8rem;padding:.85rem;border:none;border-radius:1rem;background:var(--primary-grad);color:#fff;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(232,115,74,.35);transition:.2s;}
+.goto-care:active{transform:scale(.97);}
+/* ==================== 快捷选项 ==================== */
+.quick-replies{flex-shrink:0;padding:.4rem 1rem;display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;min-height:2.6rem;}
+.quick-btn{border:1.5px solid var(--primary);background:var(--card);color:var(--primary-dark);font-size:.9rem;padding:.45rem .95rem;border-radius:1.4rem;cursor:pointer;transition:.2s;box-shadow:var(--shadow);}
+.quick-btn:active{transform:scale(.94);background:var(--primary-light);}
+/* ==================== 底部输入 ==================== */
+footer{flex-shrink:0;padding:.6rem 1rem .8rem;background:linear-gradient(to top,var(--bg) 70%,transparent);}
+.input-area{display:flex;align-items:center;gap:.5rem;background:var(--card);border:1.5px solid var(--border);border-radius:2rem;padding:.35rem .5rem .35rem .6rem;box-shadow:var(--shadow);}
+#mic-btn{width:2.2rem;height:2.2rem;border:none;background:var(--primary-light);color:var(--primary-dark);border-radius:50%;font-size:1.05rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s;}
+#mic-btn.recording{background:var(--red);color:#fff;animation:pulse 1.2s infinite;}
+#mic-btn.disabled{opacity:.4;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+#user-input{flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:var(--text);padding:.3rem 0;font-family:inherit;min-width:0;}
+#user-input::placeholder{color:#C5C0B8;}
+#send-btn{width:2.2rem;height:2.2rem;border:none;border-radius:50%;background:var(--primary-grad);color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s;}
+#send-btn:active{transform:scale(.92);}
+/* ==================== 免责声明 ==================== */
+.disclaimer{flex-shrink:0;text-align:center;font-size:.72rem;color:#B0AAA2;padding:.45rem 1rem .6rem;background:var(--bg);line-height:1.6;}
+/* ==================== 干预方案页 ==================== */
+.care-scroll{flex:1;overflow-y:auto;padding:.8rem 1rem 1.2rem;}
+.care-welcome{text-align:center;margin:.3rem 0 1rem;}
+.care-welcome h2{font-size:1.2rem;font-weight:700;}
+.care-welcome p{font-size:.88rem;color:var(--text-light);margin-top:.35rem;line-height:1.7;}
+.care-card{background:var(--card);border-radius:1.2rem;padding:1.1rem 1.1rem;margin-bottom:1rem;box-shadow:var(--shadow);border:1px solid var(--border);}
+.care-card h3{font-size:1.08rem;font-weight:700;display:flex;align-items:center;gap:.45rem;padding-bottom:.55rem;border-bottom:1px solid var(--border);margin-bottom:.7rem;}
+.care-card.eat h3{color:var(--primary-dark);}
+.care-card.move h3{color:var(--green);}
+.care-card.alt h3{color:var(--yellow);}
+.meal-row{margin-bottom:.65rem;}
+.meal-tag{display:inline-block;font-size:.76rem;font-weight:700;color:#fff;background:var(--primary);padding:.15rem .6rem;border-radius:.6rem;margin-right:.4rem;vertical-align:middle;}
+.care-card.move .meal-tag{background:var(--green);}
+.meal-body{display:inline;vertical-align:middle;}
+.meal-text{font-size:.92rem;line-height:1.75;}
+.meal-tip{font-size:.8rem;color:var(--text-light);margin-top:.2rem;padding-left:.1rem;}
+.care-tip{font-size:.86rem;background:var(--primary-light);border-radius:.7rem;padding:.55rem .8rem;margin-top:.6rem;line-height:1.7;color:var(--primary-dark);}
+.care-card.move .care-tip{background:var(--green-light);color:#2E7D5B;}
+.alt-item{display:flex;gap:.55rem;align-items:flex-start;padding:.5rem 0;border-bottom:1px dashed var(--border);font-size:.9rem;line-height:1.65;}
+.alt-item:last-child{border-bottom:none;}
+.alt-icon{flex-shrink:0;font-size:1rem;}
+.alt-from{color:var(--text-light);}
+.alt-to{color:var(--green);font-weight:600;}
+.care-note{font-size:.8rem;color:var(--red);background:var(--red-light);border:1px solid #F0B6B4;border-radius:.8rem;padding:.7rem .9rem;line-height:1.7;margin-top:.2rem;}
+/* ==================== 弹窗 ==================== */
+.modal-mask{position:fixed;inset:0;background:rgba(60,50,40,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:1.2rem;backdrop-filter:blur(2px);}
+.modal-mask[hidden]{display:none;}
+.modal-card{background:var(--card);border-radius:1.4rem;padding:1.4rem 1.3rem;width:100%;max-width:24rem;box-shadow:0 20px 50px rgba(0,0,0,.2);animation:popIn .25s ease;}
+@keyframes popIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
+.modal-title{font-size:1.15rem;font-weight:700;text-align:center;color:var(--primary-dark);}
+.modal-q{text-align:center;font-size:.92rem;color:var(--text-light);margin:.6rem 0 1rem;line-height:1.6;}
+.modal-btn{display:block;width:100%;padding:.85rem;border:none;border-radius:1rem;font-size:.98rem;font-weight:700;cursor:pointer;margin-bottom:.6rem;transition:.2s;background:var(--primary-grad);color:#fff;box-shadow:0 5px 14px rgba(232,115,74,.3);}
+.modal-btn:active{transform:scale(.97);}
+.modal-btn.ghost{background:var(--card);color:var(--primary-dark);border:1.5px solid var(--primary);}
+.modal-btn.green{background:linear-gradient(135deg,#7FD3A3,#4CAF7D);box-shadow:0 5px 14px rgba(76,175,125,.3);}
+.level-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.level-grid button{padding:.8rem .4rem;border:1.5px solid var(--border);border-radius:.9rem;background:var(--card);font-size:.92rem;cursor:pointer;transition:.2s;}
+.level-grid button:active{transform:scale(.95);border-color:var(--primary);background:var(--primary-light);}
+/* 二次确认弹窗 */
+.confirm-box{max-width:22rem;}
+.confirm-msg{font-size:.95rem;line-height:1.7;text-align:center;margin:.5rem 0 1.1rem;}
+.confirm-btns{display:flex;gap:.6rem;}
+.confirm-btns button{flex:1;padding:.8rem;border:none;border-radius:.9rem;font-size:.95rem;font-weight:700;cursor:pointer;}
+.confirm-btns .yes{background:var(--primary-grad);color:#fff;}
+.confirm-btns .no{background:var(--card);color:var(--text-light);border:1.5px solid var(--border);}
+/* ==================== 轻提示 toast ==================== */
+.toast{position:fixed;left:50%;bottom:5.5rem;transform:translateX(-50%);background:rgba(60,50,40,.85);color:#fff;font-size:.85rem;padding:.6rem 1.1rem;border-radius:1.2rem;z-index:99;animation:toastIn .25s ease;white-space:nowrap;}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+/* ==================== 麦克风波浪动画 ==================== */
+#mic-btn{position:relative;}
+#mic-btn.recording::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--red);animation:micWave 1.3s infinite;pointer-events:none;}
+@keyframes micWave{0%{transform:scale(.9);opacity:.7;}100%{transform:scale(1.7);opacity:0;}}
+/* ==================== 多选题按钮 ==================== */
+.quick-btn.multi-btn.selected{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 3px 10px rgba(232,115,74,.35);}
+.quick-btn.multi-btn.selected::before{content:"✓ ";}
+.quick-btn.multi-confirm{width:100%;border-radius:1rem;padding:.6rem;font-size:1rem;font-weight:700;background:var(--primary-grad);color:#fff;border-color:transparent;box-shadow:0 5px 14px rgba(232,115,74,.3);}
+.quick-btn.multi-confirm:active{transform:scale(.97);}
+/* ==================== 报告卡片列表（ul/li 适老排版） ==================== */
+.care-list{list-style:none;margin:0;padding:0;}
+.care-list li{padding:.3rem 0 .3rem 1.2rem;position:relative;line-height:1.8;font-size:.9rem;}
+.care-list li::before{content:"●";position:absolute;left:.1rem;font-size:.45rem;top:.7rem;}
+.care-card.eat .care-list li::before{color:var(--primary);}
+.care-card.move .care-list li::before{color:var(--green);}
+/* 红线警告框（运动模块顶部） */
+.red-warn{background:var(--red-light);border:2px solid var(--red);border-radius:.8rem;padding:.7rem .9rem;margin-bottom:.8rem;color:var(--red);font-weight:700;font-size:.9rem;line-height:1.75;}
+/* ==================== 响应式 ==================== */
+@media(min-width:640px){.home-cards{flex-direction:row;}.home-card{flex:1;}.care-scroll,.home-scroll,#chat-area{max-width:42rem;margin-left:auto;margin-right:auto;width:100%;}}
+</style>
+</head>
+<body>
+<div class="bg-blob b1"></div><div class="bg-blob b2"></div><div class="bg-blob b3"></div>
+<!-- 顶部栏 -->
+<header>
+  <div class="doctor-wrap" id="doctor-logo"></div>
+  <div class="header-text">
+    <h1>肌少症知信行健康助手</h1>
+    <p>健康管理师小李陪您聊 · 筛查风险 · 定制方案</p>
+  </div>
+  <div class="font-switch" role="group" aria-label="字体大小切换">
+    <button class="fs-btn" data-fs="sm" title="小字体">小</button>
+    <button class="fs-btn active" data-fs="md" title="中字体">中</button>
+    <button class="fs-btn" data-fs="lg" title="大字体">大</button>
+  </div>
+</header>
+<!-- 首页 -->
+<section id="view-home" class="view">
+  <div class="home-scroll">
+    <div class="home-hero">
+      <div class="hero-avatar" id="hero-avatar"></div>
+      <h2>您好，我是健康管理师小李😊</h2>
+      <p>专门陪叔叔阿姨聊聊身体的事儿，帮您看看肌肉力气保持得怎么样。今天咱们不看病、不开药，就拉拉家常、学点养肌肉的小窍门。</p>
+      <span class="awg-badge">依据 AWGS 2019 / 2023 中国共识</span>
+    </div>
+    <div class="home-cards">
+      <div class="home-card" onclick="startScreen()">
+        <div class="hc-icon">🩺</div>
+        <h3>肌肉风险筛查</h3>
+        <p>像聊天一样，一步步问问吃饭、走路、力气、睡觉，几分钟帮您摸清肌肉状态</p>
+        <span class="hc-btn">开始筛查 →</span>
+      </div>
+      <div class="home-card green" onclick="openCare()">
+        <div class="hc-icon">🍊</div>
+        <h3>健康干预方案</h3>
+        <p>吃得对、动得巧，给您定制每日三餐食谱和居家锻炼动作，遇到困难还有替代招</p>
+        <span class="hc-btn">进入干预 →</span>
+      </div>
+    </div>
+    <div class="home-tags"><span>🩺 知识唤醒</span><span>💪 信念建立</span><span>🚶 行为启动</span></div>
+  </div>
+</section>
+<!-- 筛查聊天页 -->
+<section id="view-screen" class="view" hidden>
+  <div class="progress-steps" id="progress-steps"></div>
+  <div class="topbar">
+    <button class="topbar-btn" onclick="goHome()">← 首页</button>
+    <button class="topbar-btn" id="back-btn" onclick="goBackPrev()">↩ 返回上一题</button>
+  </div>
+  <main id="chat-area"></main>
+  <div class="quick-replies" id="quick-replies"></div>
+  <footer>
+    <div class="input-area">
+      <button id="mic-btn" title="点击说话（也可长按输入框）">🎤</button>
+      <input type="text" id="user-input" placeholder="点🎤说话，或打字..." autocomplete="off">
+      <button id="send-btn" title="发送">➤</button>
+    </div>
+  </footer>
+</section>
+<!-- 干预方案页 -->
+<section id="view-care" class="view" hidden>
+  <div class="topbar">
+    <button class="topbar-btn" onclick="goHome()">← 首页</button>
+    <button class="topbar-btn" onclick="openCareModal()">🔄 重新选择</button>
+  </div>
+  <div class="care-scroll" id="care-body"></div>
+</section>
+<!-- 免责声明 -->
+<div class="disclaimer">本工具仅提供健康科普与生活方式指导，不能替代医生诊疗。如有不适请及时就医。</div>
+<!-- 干预入口弹窗：二选一 -->
+<div class="modal-mask" id="care-modal" hidden>
+  <div class="modal-card">
+    <div class="modal-title">🍊 进入健康干预</div>
+    <p class="modal-q">您了解自己的肌肉情况吗？</p>
+    <div id="modal-step1">
+      <button class="modal-btn" onclick="carePickKnown()">A. 我知道，直接看方案</button>
+      <button class="modal-btn ghost" onclick="carePickScreen()">B. 不清楚，先做筛查</button>
+    </div>
+    <div id="modal-step2" hidden>
+      <p class="modal-q">您觉得自己目前的肌肉情况属于哪种？</p>
+      <div class="level-grid">
+        <button onclick="careLevel('good')">💪 良好</button>
+        <button onclick="careLevel('fair')">🙂 一般</button>
+        <button onclick="careLevel('poor')">😟 较差</button>
+        <button onclick="careLevel('bad')">😣 很差</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 二次确认弹窗（兜底默认值） -->
+<div class="modal-mask" id="confirm-modal" hidden>
+  <div class="modal-card confirm-box">
+    <div class="modal-title">🤔 帮您确认一下</div>
+    <p class="confirm-msg" id="confirm-msg"></p>
+    <div class="confirm-btns">
+      <button class="yes" onclick="confirmDefault(true)">行，就这么记</button>
+      <button class="no" onclick="confirmDefault(false)">不对，我重新说</button>
+    </div>
+  </div>
+</div>
+<script>
+/* ==================== SVG 头像 ==================== */
+var DOCTOR_SVG='<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#FFF3ED"/><circle cx="50" cy="38" r="15" fill="#FF9A6C"/><path d="M22 86c0-15 12-24 28-24s28 9 28 24" fill="#FF9A6C"/><rect x="40" y="60" width="20" height="8" rx="3" fill="#fff"/><rect x="46" y="63" width="8" height="2.5" rx="1" fill="#E8734A"/><rect x="48.5" y="60.5" width="3" height="7" rx="1" fill="#E8734A"/><circle cx="44" cy="37" r="1.5" fill="#3D3A36"/><circle cx="56" cy="37" r="1.5" fill="#3D3A36"/><path d="M45 44q5 4 10 0" stroke="#C95A35" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+var USER_SVG='<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#E8F5EE"/><circle cx="50" cy="38" r="15" fill="#7FB998"/><path d="M22 86c0-15 12-24 28-24s28 9 28 24" fill="#7FB998"/><circle cx="44" cy="37" r="1.5" fill="#2E5D48"/><circle cx="56" cy="37" r="1.5" fill="#2E5D48"/><path d="M45 43q5 3 10 0" stroke="#2E5D48" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+/* ==================== 全局状态 ==================== */
+var S={};
+function resetS(){
+  S={history:[],pendingConfirm:null,pendingAgeConfirm:null,awaitingBodyFeel:false,assessmentDone:false,asked:{},lastKB:null,offTopic:0,
+     age:null,gender:null,body:null,grip:null,gait:null,chair:null,stair:null,carry:null,
+     dietProtein:null,teeth:null,vegetarian:null,appetite:null,bowel:null,
+     walkOut:null,housework:null,exerciseFreq:null,taichi:null,
+     sleep:null,constitution:null,hp:null,diabetes:null,kidney:null,joint:null,redline:null,risk:null};
+}
+resetS();
+var flowIdx=-1; /* 当前流程下标 */
+/* ==================== DOM 引用 ==================== */
+var chatArea=document.getElementById('chat-area');
+var quickArea=document.getElementById('quick-replies');
+var userInput=document.getElementById('user-input');
+var micBtn=document.getElementById('mic-btn');
+var sendBtn=document.getElementById('send-btn');
+var progSteps=document.getElementById('progress-steps');
+var backBtn=document.getElementById('back-btn');
+var careModal=document.getElementById('care-modal');
+var confirmModal=document.getElementById('confirm-modal');
+var confirmMsgEl=document.getElementById('confirm-msg');
+document.getElementById('doctor-logo').innerHTML=DOCTOR_SVG;
+document.getElementById('hero-avatar').innerHTML=DOCTOR_SVG;
+/* ==================== 视图切换 ==================== */
+function showView(id){
+  ['view-home','view-screen','view-care'].forEach(function(v){document.getElementById(v).hidden=(v!==id);});
+  window.scrollTo(0,0);
+}
+function goHome(){stopSpeak();showView('view-home');}
+function toast(msg){
+  var t=document.createElement('div');t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(function(){t.remove();},2200);
+}
+/* ==================== 流程辅助函数 ==================== */
+/* 取某题定义 */
+function getQ(key){ for(var i=0;i<FLOW.length;i++){ if(FLOW[i].key===key) return FLOW[i]; } return null; }
+/* 按值取选项对象 */
+function OPT(key,v){ var q=getQ(key); if(!q) return null; for(var i=0;i<q.opts.length;i++){ if(q.opts[i].v===v) return q.opts[i]; } return null; }
+/* 关键词匹配选项：取"最长命中关键词"所在选项，避免"有点费劲"误匹配到"费劲" */
+function matchOpt(key,t){
+  var q=getQ(key); if(!q) return null; var best=null,bl=0;
+  q.opts.forEach(function(o){ (o.k||[o.t]).forEach(function(w){ if(t.indexOf(w)>=0&&w.length>bl){bl=w.length;best=o;} }); });
+  return best;
+}
+/* 年龄解析：纯数字一律视作年龄（先确认再收下），支持"72岁""我80了"等自由表达 */
+function parseAge(t){
+  if(/记不清|记不住|忘了|不知道|不清楚|想不起/.test(t)) return OPT('age','?');
+  var s=String(t).replace(/\s+/g,'');
+  var m=s.match(/^(\d{1,3})$/); /* 纯数字：一律视作年龄，不受按钮区间限制 */
+  if(m){ var pa=parseInt(m[1],10); if(pa>=1) return {rawAge:pa}; }
+  var btn=matchOpt('age',t); /* 先匹配按钮选项文字（如"65~69岁"），命中直接收下 */
+  if(btn) return btn;
+  m=s.match(/(\d{2,3})/); /* 含数字的自由表达（如"我80了""72岁"） */
+  if(m){ var a=parseInt(m[1],10); if(a>=1&&a<=120) return {rawAge:a}; }
+  return null; /* 非年龄相关 → 走兜底话术 */
+}
+/* 身高体重解析：支持"175，135斤""1米75 140斤""160cm 60kg"等，自动算BMI */
+function parseBody(t){
+  var s=String(t).replace(/，/g,',').replace(/\s+/g,' ');
+  var h=null,w=null,used=[];
+  /* 身高：1.6米 / 1米6 / 1米75 / 175cm */
+  var mH=s.match(/(\d(?:\.\d{1,2})?)\s*米\s*(\d{1,2})?/);
+  if(mH){ h=parseFloat(mH[1]); if(mH[2]) h=h+parseInt(mH[2],10)/(mH[2].length===1?10:100); used.push([mH.index,mH.index+mH[0].length]); }
+  if(h===null){ mH=s.match(/(\d{3})\s*(?:厘米|cm|CM)/); if(mH){ h=parseInt(mH[1],10)/100; used.push([mH.index,mH.index+mH[0].length]); } }
+  /* 体重：斤/公斤/kg/千克 */
+  var mW=s.match(/(\d{2,3}(?:\.\d)?)\s*(斤|公斤|kg|千克|KG)/);
+  if(mW){ w=parseFloat(mW[1]); if(/公斤|kg|千克|KG/.test(mW[2])) w=w*2; used.push([mW.index,mW.index+mW[0].length]); }
+  /* 无单位数字补缺：逗号/空格隔开两组数字，默认前身高后体重 */
+  if(h===null||w===null){
+    var re=/\d{2,3}(?:\.\d{1,2})?/g,mm,rest=[];
+    while((mm=re.exec(s))){
+      var inU=false;
+      for(var i=0;i<used.length;i++){ if(mm.index>=used[i][0]&&mm.index+mm[0].length<=used[i][1]){inU=true;break;} }
+      if(!inU)rest.push(parseFloat(mm[0]));
+    }
+    if(h===null&&w===null&&rest.length===1){
+      var v=rest[0]; /* 单个数字：140~220当身高cm，50~300当体重斤 */
+      if(v>=140&&v<=220)h=v/100; else if(v>=50&&v<=300)w=v;
+    }else{
+      var idx=0;
+      if(h===null&&idx<rest.length){ var hv=rest[idx];idx++; if(hv>=100&&hv<230)h=hv/100; else if(hv>=1.2&&hv<2.3)h=hv; }
+      if(w===null&&idx<rest.length){ var wv=rest[idx];idx++; if(wv>=50&&wv<=300)w=wv; }
+    }
+  }
+  if(h&&w&&h>1&&h<2.5&&w>=50&&w<=300){
+    var bmi=w/2/(h*h);
+    var feel=bmi<18.5?'偏瘦':(bmi<24?'不胖不瘦':(bmi<28?'偏胖':'肥胖'));
+    return {v:Math.round(h*100)+'cm/'+Math.round(w)+'斤',feel:feel,bmi:+bmi.toFixed(1),l:bmi<18.5?2:0};
+  }
+  if(h||w||/\d/.test(s))return {incomplete:true}; /* 有数字但信息不全 */
+  return null; /* 完全没数字 */
+}
+/* ==================== 筛查问卷流程（数据驱动） ==================== */
+/* 每题：key=字段名 ph=所属阶段(0~7) ask=问题 opts=快捷选项{t:文字,v:值,l:风险等级0~4,k:同义词} parse=自由文本解析 */
+var FLOW=[
+/* ---- 第1步·基础信息 ---- */
+{key:'age',ph:0,ask:'咱们先从简单的开始——您今年大概多大岁数了？',
+ opts:[{t:'60~64岁',v:'60~64',l:0},{t:'65~69岁',v:'65~69',l:1},{t:'70~79岁',v:'70~79',l:2},{t:'80岁及以上',v:'80+',l:3},{t:'记不清了',v:'?',l:0}],
+ parse:parseAge},
+{key:'gender',ph:0,ask:'您是男同志还是女同志？',
+ opts:[{t:'男同志',v:'男',l:0,k:['男','爷爷','先生','大爷','老头']},{t:'女同志',v:'女',l:0,k:['女','奶奶','阿姨','大妈','女士']}]},
+{key:'body',ph:0,ask:'您大概多高、多重？比如"一米六，120斤"，说个大概就行。',
+ opts:[{t:'记不清了',v:'?',l:0,k:['记不清','不知道','忘了','没量过']}],
+ parse:parseBody,hint:'说个大概数就行，我帮您算算胖瘦'},
+/* ---- 第2步·握力（拧毛巾主观分级） ---- */
+{key:'grip',ph:1,ask:'现在咱们试试力气。您平时拧干毛巾、拧矿泉水瓶盖，感觉费不费劲？',
+ opts:[{t:'完全有劲，轻松拧干',v:'g1',l:0,k:['完全有劲','很有劲','特别有劲','轻松','不费劲','没问题','挺有劲']},
+ {t:'稍微有点费力',v:'g2',l:1,k:['稍微有点费力','有点费力','有点费劲','还行','凑合','马马虎虎','不太费劲','差不多']},
+ {t:'比较费劲',v:'g3',l:2,k:['比较费劲','比较费力','费劲','费力','吃力','没劲','不太行','差劲']},
+ {t:'很难攥紧',v:'g4',l:3,k:['很难攥紧','攥不紧','握不住','拧不动','拧不开','打不开','抓不住']},
+ {t:'基本使不上劲',v:'g5',l:4,k:['基本使不上劲','完全没劲','一点劲没有','根本攥不住','一点都攥不紧','完全拧不动']}]},
+/* ---- 第3步·步速（过马路主观分级） ---- */
+{key:'gait',ph:2,ask:'再说说走路。您平时过马路，绿灯那点时间能从容走过去吗？',
+ opts:[{t:'很充裕，慢慢走也够',v:'s1',l:0,k:['很充裕','充裕','从容','很轻松','时间够用','足够','绰绰有余']},
+ {t:'刚好够用',v:'s2',l:1,k:['刚好够','刚好','刚刚好','差不多够','勉强']},
+ {t:'有点赶，得加快步子',v:'s3',l:2,k:['有点赶','有点紧','得加快','快点走','小跑','紧巴巴']},
+ {t:'经常赶不上',v:'s4',l:3,k:['经常赶不上','赶不上','来不及','经常来不及','走到一半']},
+ {t:'基本过不去',v:'s5',l:4,k:['基本过不去','过不去','根本过不去','走不到','红灯']}]},
+/* ---- 第4步·居家功能测试 ---- */
+{key:'chair',ph:3,ask:'您从椅子上站起来，需要用手扶着东西吗？',
+ opts:[{t:'不用扶，很轻松',v:'c1',l:0,k:['不用扶','不扶','很轻松','直接站','轻松站起']},
+ {t:'偶尔要扶一下',v:'c2',l:1,k:['偶尔扶','有时扶','偶尔要扶','有时要扶']},
+ {t:'经常要扶着',v:'c3',l:2,k:['经常扶','经常要扶','总要扶','得扶着']},
+ {t:'不扶就站不起来',v:'c4',l:3,k:['不扶站不起来','站不起来','扶着才行','起不来','站起困难']}]},
+{key:'stair',ph:3,ask:'一口气爬两层楼梯，您感觉怎么样？',
+ opts:[{t:'轻轻松松',v:'t1',l:0,k:['轻轻松松','轻松','不喘','一口气','没问题']},
+ {t:'有点喘，但没问题',v:'t2',l:1,k:['有点喘','微喘','喘一点','还行']},
+ {t:'得歇一歇',v:'t3',l:2,k:['得歇','歇一歇','歇会儿','中途歇','喘得慌','费劲']},
+ {t:'爬不动',v:'t4',l:3,k:['爬不动','上不去','不行','受不了','太累']}]},
+{key:'carry',ph:3,ask:'拎5斤重的油上楼，您能行吗？',
+ opts:[{t:'没问题',v:'y1',l:0,k:['没问题','轻松','拎得动','可以','行']},
+ {t:'有点吃力',v:'y2',l:1,k:['有点吃力','有点费劲','勉强','还行']},
+ {t:'拎得动但走不远',v:'y3',l:2,k:['拎不远','拎一段','走不远','得歇']},
+ {t:'拎不动',v:'y4',l:3,k:['拎不动','不行','提不动','拿不动']}]}
+,
+/* ---- 第5步·饮食问询 ---- */
+{key:'dietProtein',ph:4,ask:'说说吃饭。肉、蛋、奶、鱼虾、豆制品这些"长肌肉"的食物，您多久吃一次？',
+ opts:[{t:'天天都吃',v:'p1',l:0,k:['天天','每天','顿顿','每天都吃']},
+ {t:'一天能吃上一顿',v:'p2',l:1,k:['一天一顿','每天一顿','经常吃']},
+ {t:'隔两三天吃一次',v:'p3',l:2,k:['隔两三天','两三天','三四天']},
+ {t:'一周吃一两次',v:'p4',l:3,k:['一周一两次','一周','半个月','很少吃']},
+ {t:'基本不吃',v:'p5',l:4,k:['不吃','基本不吃','很少','不吃肉']}]},
+{key:'teeth',ph:4,ask:'您牙口怎么样？吃肉、啃硬东西费劲吗？',
+ opts:[{t:'挺好，啥都能吃',v:'h1',l:0,k:['挺好','啥都能吃','没问题','什么都吃','好着呢']},
+ {t:'一般，硬的少吃',v:'h2',l:1,k:['一般','还行','硬的少吃','硬的不行']},
+ {t:'不太好，只能吃软的',v:'h3',l:2,k:['不太好','只能吃软的','吃软的','嚼不动硬的','假牙']},
+ {t:'很差，基本嚼不动',v:'h4',l:3,k:['很差','嚼不动','基本嚼不动','没牙','掉光']}]},
+{key:'vegetarian',ph:4,ask:'您平时吃素吗？',
+ opts:[{t:'不吃素，荤素都吃',v:'v1',l:0,k:['不吃素','荤素都吃','啥都吃','吃肉']},
+ {t:'偶尔吃素',v:'v2',l:1,k:['偶尔吃素','有时吃素','基本不吃素']},
+ {t:'经常吃素',v:'v3',l:2,k:['经常吃素','多吃素','基本吃素']},
+ {t:'长期吃素',v:'v4',l:3,k:['长期吃素','一直吃素','吃素','全素','蛋奶素']}]},
+{key:'appetite',ph:4,ask:'您最近胃口怎么样？',
+ opts:[{t:'胃口很好',v:'a1',l:0,k:['很好','好着呢','吃得香','不错']},
+ {t:'还行',v:'a2',l:1,k:['还行','一般','凑合','还可以']},
+ {t:'不太好',v:'a3',l:2,k:['不太好','不好','吃不多','没胃口','不想吃']},
+ {t:'很差，吃不下',v:'a4',l:3,k:['很差','吃不下','一点不想吃','没食欲']}]},
+{key:'bowel',ph:4,ask:'大便正常吗？有没有便秘或拉肚子？',
+ opts:[{t:'每天一次，很规律',v:'b1',l:0,k:['每天','规律','正常','一天一次']},
+ {t:'偶尔便秘或拉肚子',v:'b2',l:1,k:['偶尔','有时','时好时坏']},
+ {t:'经常便秘',v:'b3',l:2,k:['经常便秘','便秘','拉不出','干结']},
+ {t:'经常拉肚子',v:'b4',l:3,k:['经常拉肚子','拉肚子','腹泻','稀的']}]},
+/* ---- 第6步·运动问询 ---- */
+{key:'walkOut',ph:5,ask:'您平时出门散步、遛弯吗？',
+ opts:[{t:'天天出门走',v:'w1',l:0,k:['天天','每天','天天走','天天遛']},
+ {t:'一周出去三四次',v:'w2',l:1,k:['三四次','经常出去','一周几次']},
+ {t:'一周出去一两次',v:'w3',l:2,k:['一两次','偶尔出去','一周一次']},
+ {t:'很少出门',v:'w4',l:3,k:['很少出门','很少出去','不怎么出门','基本在家']},
+ {t:'基本不出门',v:'w5',l:4,k:['不出门','出不了门','卧床','出不去','一直在家']}]},
+{key:'housework',ph:5,ask:'平时在家做家务吗？扫地、做饭、擦桌子这些。',
+ opts:[{t:'天天做',v:'k1',l:0,k:['天天做','每天做','天天干']},
+ {t:'经常做',v:'k2',l:1,k:['经常做','常做','经常干']},
+ {t:'偶尔做',v:'k3',l:2,k:['偶尔做','有时做','偶尔干']},
+ {t:'基本不做',v:'k4',l:3,k:['不做','基本不做','干不了','不做家务']}]},
+{key:'exerciseFreq',ph:5,ask:'您有专门锻炼的习惯吗？散步、做操、打太极都算。',
+ opts:[{t:'天天锻炼',v:'e1',l:0,k:['天天锻炼','每天锻炼','天天练','每天练']},
+ {t:'每周三四次',v:'e2',l:1,k:['每周三四次','一周三四次','经常锻炼','一周几次']},
+ {t:'偶尔练练',v:'e3',l:2,k:['偶尔练','偶尔锻炼','有时练','偶尔']},
+ {t:'基本不锻炼',v:'e4',l:3,k:['不锻炼','基本不练','没锻炼','不练']}]},
+{key:'taichi',ph:5,ask:'八段锦、太极拳这些老祖宗传下来的功法，您练过吗？',
+ opts:[{t:'天天练',v:'q1',l:0,k:['天天练','每天练','天天打','经常练']},
+ {t:'以前练过',v:'q2',l:1,k:['以前练过','练过','以前打过','学过']},
+ {t:'没练过，想学',v:'q3',l:2,k:['没练过','想学','想练','没学过','可以试试','愿意学']},
+ {t:'不想练',v:'q4',l:3,k:['不想','不想练','不愿意','没兴趣','学不会']}]},
+/* ---- 第7步·睡眠+体质 ---- */
+{key:'sleep',ph:6,ask:'您最近睡得怎么样？',
+ opts:[{t:'睡得挺好',v:'z1',l:0,k:['挺好','睡得香','不错','好着呢','一觉到天亮']},
+ {t:'偶尔失眠',v:'z2',l:1,k:['偶尔','有时','偶尔失眠','有时睡不好']},
+ {t:'经常睡不好',v:'z3',l:2,k:['经常睡不好','睡不好','失眠','早醒','容易醒']},
+ {t:'整夜睡不好',v:'z4',l:3,k:['整夜','睡不着','彻夜','严重失眠','整宿']}]},
+{key:'constitution',ph:6,ask:'您平时怕冷还是容易口干？还是都没有？',
+ opts:[{t:'都没有',v:'n',l:0,k:['都没有','没有','正常','挺好','都不']},
+ {t:'比较怕冷',v:'cold',l:1,k:['怕冷','手脚冰凉','冰凉','畏寒','凉']},
+ {t:'经常口干',v:'dry',l:1,k:['口干','嘴干','干渴','嗓子干','渴']},
+ {t:'又怕冷又口干',v:'both',l:2,k:['又怕冷又口干','都怕','又冷又干','两个都有','都有']},
+ {t:'说不清',v:'?',l:0,k:['说不清','不知道','不清楚']}]},
+/* ---- 第8步·慢病问询 ---- */
+{key:'hp',ph:7,ask:'您有没有高血压？',
+ opts:[{t:'没有',v:'无',l:0,k:['没有','没','无','没问题']},
+ {t:'有，控制得挺好',v:'有控制好',l:1,k:['有','控制','挺好','稳定','正常']},
+ {t:'有，时高时低',v:'有控制差',l:2,k:['时高时低','不稳定','控制不好','没控制','忽高忽低']},
+ {t:'不清楚',v:'不清楚',l:0,k:['不清楚','不知道','没查过','没量过','没测过']}]},
+{key:'diabetes',ph:7,ask:'有没有糖尿病？',
+ opts:[{t:'没有',v:'无',l:0,k:['没有','没','无']},
+ {t:'有，控制得挺好',v:'有控制好',l:1,k:['有','控制','挺好','稳定','正常']},
+ {t:'有，血糖不太稳',v:'有控制差',l:2,k:['不稳定','控制不好','没控制','忽高忽低','血糖高']},
+ {t:'不清楚',v:'不清楚',l:0,k:['不清楚','不知道','没查过','没测过']}]},
+{key:'kidney',ph:7,ask:'肾脏方面有没有毛病？比如肾炎、肾功能不好。',
+ opts:[{t:'没有',v:'无',l:0,k:['没有','没','无']},
+ {t:'有',v:'有',l:2,k:['有','肾不好','肾炎','肾衰','肾功能']},
+ {t:'不清楚',v:'不清楚',l:0,k:['不清楚','不知道','没查过']}]},
+{key:'joint',ph:7,ask:'膝盖、腰这些关节，平时疼吗？',
+ opts:[{t:'不疼',v:'j1',l:0,k:['不疼','没事','没有','很好']},
+ {t:'偶尔疼',v:'j2',l:1,k:['偶尔疼','有时疼','偶尔','有时']},
+ {t:'阴天下雨就疼',v:'j3',l:2,k:['阴天','下雨','变天','天气']},
+ {t:'经常疼',v:'j4',l:3,k:['经常疼','常疼','总疼','天天疼']},
+ {t:'疼得厉害',v:'j5',l:4,k:['厉害','很疼','疼得受不了','剧痛','走不了路']}]},
+/* ---- 红线情况（多选，运动安全必填） ---- */
+{key:'redline',ph:7,multi:true,ask:'最后问个特别重要的——您有没有以下情况？这直接关系到运动安全，请务必告诉我（可多选）',
+ opts:[{t:'❤️ 冠心病/心衰',v:'heart',l:3,k:['冠心病','心衰','心脏不好','心脏病','心绞痛','心脏']},
+ {t:'🦴 严重骨质疏松',v:'osteo',l:3,k:['骨质疏松','骨松','骨头脆','骨密度']},
+ {t:'🩹 近期骨折',v:'fracture',l:3,k:['骨折','摔骨折','骨裂','裂了','断了']},
+ {t:'✅ 以上都没有',v:'none',l:0,k:['没有','都没','无','都没有','都没以上']}]}
+];
+/* ==================== 进度条（10个阶段） ==================== */
+var PHASES=['基础','握力','步速','功能','饮食','运动','睡眠','慢病','结果','干预'];
+function renderProgress(){
+  var cur=S.assessmentDone?8:(flowIdx>=0?FLOW[flowIdx].ph:0);
+  var html='';
+  for(var i=0;i<PHASES.length;i++){
+    html+='<div class="step '+(i<cur?'done':(i===cur?'active':''))+'"><div class="step-dot">'+(i<cur?'✓':(i+1))+'</div></div>'
+        +(i<PHASES.length-1?'<div class="step-line '+(i<cur?'done':'')+'"></div>':'');
+  }
+  progSteps.innerHTML=html;
+}
+/* ==================== 消息渲染 ==================== */
+function addMsg(text,who,extraHTML,hint){
+  var msg=document.createElement('div');msg.className='msg '+who;
+  var av=document.createElement('div');av.className='avatar';
+  av.innerHTML=(who==='ai')?DOCTOR_SVG:USER_SVG;
+  var bubble=document.createElement('div');bubble.className='bubble';
+  bubble.textContent=text;
+  if(extraHTML)bubble.innerHTML+=extraHTML;
+  if(who==='ai'){ /* 每条AI消息附语音播报按钮 */
+    var sp=document.createElement('button');
+    sp.className='speak-btn';sp.title='点我朗读这段话';sp.innerHTML='🔊';
+    sp.onclick=function(){speakText(text,sp);};
+    bubble.appendChild(sp);
+  }
+  msg.appendChild(av);msg.appendChild(bubble);
+  chatArea.appendChild(msg);
+  if(hint){var h=document.createElement('div');h.className='guide-hint';h.textContent=hint;chatArea.appendChild(h);}
+  chatArea.scrollTop=chatArea.scrollHeight;
+  return bubble;
+}
+/* AI说话（带打字动画） */
+function aiSay(text,extraHTML,delay,hint){
+  delay=delay||700;
+  var t=document.createElement('div');t.className='msg ai';
+  t.innerHTML='<div class="avatar">'+DOCTOR_SVG+'</div><div class="bubble typing"><span></span><span></span><span></span></div>';
+  chatArea.appendChild(t);chatArea.scrollTop=chatArea.scrollHeight;
+  setTimeout(function(){t.remove();addMsg(text,'ai',extraHTML,hint);},delay);
+}
+/* 快捷选项按钮 */
+function setQuick(replies){
+  quickArea.innerHTML='';
+  (replies||[]).forEach(function(r){
+    var b=document.createElement('button');b.className='quick-btn';b.textContent=r;
+    b.onclick=function(){quickPick(r);};
+    quickArea.appendChild(b);
+  });
+}
+function quickPick(text){
+  addMsg(text,'user');
+  handleSend(text);
+}
+/* ---- 多选题支持（红线情况等） ---- */
+var multiSel=[];
+function setQuickMulti(q){
+  quickArea.innerHTML='';
+  multiSel=[];
+  q.opts.forEach(function(o){
+    var b=document.createElement('button');
+    b.className='quick-btn multi-btn';b.textContent=o.t;b.dataset.v=o.v;
+    b.onclick=function(){toggleMulti(o,b);};
+    quickArea.appendChild(b);
+  });
+  var c=document.createElement('button');
+  c.className='quick-btn multi-confirm';c.textContent='确认提交 ✓';
+  c.onclick=function(){confirmMulti(q);};
+  quickArea.appendChild(c);
+}
+function toggleMulti(o,b){
+  if(o.v==='none'){ /* "都没有"互斥 */
+    multiSel=(multiSel.indexOf('none')>=0)?[]:['none'];
+  }else{
+    var ni=multiSel.indexOf('none');if(ni>=0)multiSel.splice(ni,1);
+    var i=multiSel.indexOf(o.v);
+    if(i>=0)multiSel.splice(i,1);else multiSel.push(o.v);
+  }
+  quickArea.querySelectorAll('.multi-btn').forEach(function(x){
+    x.classList.toggle('selected',multiSel.indexOf(x.dataset.v)>=0);
+  });
+}
+function confirmMulti(q){
+  if(multiSel.length===0){toast('请至少选一项，或选"以上都没有"');return;}
+  var noneOnly=multiSel.length===1&&multiSel[0]==='none';
+  var selOpts=multiSel.map(function(v){return OPT(q.key,v);}).filter(Boolean);
+  var txt=noneOnly?'以上都没有':selOpts.map(function(o){return o.t;}).join('、');
+  S[q.key]={v:noneOnly?[]:multiSel.slice(),t:txt,l:noneOnly?0:3};
+  S.history.push(q.key);
+  addMsg(txt,'user');
+  advance();
+}
+function handleMultiText(q,text){
+  if(/不知道|不清楚|记不清|没查过|不确定|忘了/.test(text)){proposeDefault(q);return;}
+  var matched=[];
+  q.opts.forEach(function(o){
+    (o.k||[o.t]).forEach(function(w){if(text.indexOf(w)>=0&&matched.indexOf(o)<0)matched.push(o);});
+  });
+  if(matched.length>0){
+    multiSel=matched.map(function(o){return o.v;});
+    if(multiSel.indexOf('none')>=0&&multiSel.length>1)multiSel=multiSel.filter(function(v){return v!=='none';});
+    quickArea.querySelectorAll('.multi-btn').forEach(function(x){
+      x.classList.toggle('selected',multiSel.indexOf(x.dataset.v)>=0);
+    });
+    aiSay('我帮您勾上了，您看看对不对，选完点"确认提交"就行。',null,600);
+  }else{
+    aiSay('您点下面的按钮选择就行，可以多选，选完点"确认提交"。',null,600);
+  }
+}
+/* ==================== 语音播报 TTS ==================== */
+var speakingBtn=null;
+var EMOJI_STRIP='🔊⏹📋📌🍽🦵🔴🟡🟢⚠️💡✅❌👋😊🩺💪🚶👏🤔🔄➤👆🍊💪🙂😟😣🤔❤️🦴🩹';
+function speakText(text,btn){
+  if(!('speechSynthesis' in window)){toast('您当前的浏览器不支持语音播报');return;}
+  if(speakingBtn===btn){stopSpeak();return;} /* 再点一次停止朗读 */
+  stopSpeak();
+  var clean=text.replace(new RegExp('['+EMOJI_STRIP+']','g'),'').replace(/\s+/g,' ').trim();
+  var u=new SpeechSynthesisUtterance(clean);
+  u.lang='zh-CN';u.rate=0.92;u.pitch=1;
+  u.onend=resetSpeakBtn;u.onerror=resetSpeakBtn;
+  window.speechSynthesis.speak(u);
+  btn.classList.add('speaking');btn.innerHTML='⏹';speakingBtn=btn;
+}
+function resetSpeakBtn(){if(speakingBtn){speakingBtn.classList.remove('speaking');speakingBtn.innerHTML='🔊';speakingBtn=null;}}
+function stopSpeak(){if('speechSynthesis' in window)window.speechSynthesis.cancel();resetSpeakBtn();}
+/* ==================== 字体三档切换（全局rem基准） ==================== */
+document.querySelectorAll('.fs-btn').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('.fs-btn').forEach(function(x){x.classList.remove('active');});
+    b.classList.add('active');
+    var fs=b.dataset.fs;
+    document.documentElement.classList.remove('fs-sm','fs-lg');
+    if(fs==='sm')document.documentElement.classList.add('fs-sm');
+    else if(fs==='lg')document.documentElement.classList.add('fs-lg');
+    toast(fs==='lg'?'已切换为大字体':(fs==='sm'?'已切换为小字体':'已切换为中字体'));
+  };
+});
+/* ==================== 麦克风语音输入（Web Speech API） ==================== */
+var recog=null,micOn=false;
+(function initMic(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){micBtn.classList.add('disabled');micBtn.title='当前浏览器不支持语音输入，请打字';return;}
+  recog=new SR();recog.lang='zh-CN';recog.interimResults=false;recog.continuous=false;recog.maxAlternatives=1;
+  recog.onstart=function(){micOn=true;micBtn.classList.add('recording');userInput.placeholder='🎤 正在听您说...';};
+  recog.onend=function(){micOn=false;micBtn.classList.remove('recording');userInput.placeholder='点🎤说话，或打字...';};
+  recog.onresult=function(e){var t=e.results[0][0].transcript;userInput.value=(userInput.value?userInput.value:'')+t;userInput.focus();};
+  recog.onerror=function(){toast('没听清，您再说一遍，或打字也行');};
+})();
+function toggleMic(){
+  if(!recog){toast('当前浏览器不支持语音输入，请打字');return;}
+  if(micOn){recog.stop();return;}
+  try{recog.start();}catch(e){toast('语音没准备好，稍等再试');}
+}
+micBtn.addEventListener('click',toggleMic);
+/* 长按输入框0.6秒也可唤起语音输入 */
+var pressTimer=null;
+function startPress(){pressTimer=setTimeout(toggleMic,600);}
+function cancelPress(){clearTimeout(pressTimer);}
+userInput.addEventListener('mousedown',startPress);
+userInput.addEventListener('mouseup',cancelPress);
+userInput.addEventListener('mouseleave',cancelPress);
+userInput.addEventListener('touchstart',startPress,{passive:true});
+userInput.addEventListener('touchend',cancelPress);
+/* ==================== 发送按钮/回车 ==================== */
+function submitInput(){
+  var t=userInput.value;userInput.value='';
+  if(t.trim())quickPick(t.trim());
+}
+sendBtn.addEventListener('click',submitInput);
+userInput.addEventListener('keydown',function(e){if(e.key==='Enter')submitInput();});
+/* ==================== 筛查流程控制 ==================== */
+/* 阶段过渡语（进入新阶段时说一句） */
+var PHASE_BRIDGE={2:'力气问完了，接下来咱们聊聊走路。',3:'走路也了解了，再试试几个居家小动作。',4:'居家动作了解了，咱们聊聊您平时怎么吃。',5:'吃饭问完了，再说说您平时怎么动。',6:'运动聊完了，问问睡眠和体质。',7:'睡眠了解了，最后问问您有没有慢性病。'};
+function startScreen(){
+  resetS();flowIdx=-1;
+  showView('view-screen');
+  chatArea.innerHTML='';quickArea.innerHTML='';
+  renderProgress();
+  var banner=document.createElement('div');banner.className='welcome-banner';
+  banner.innerHTML='<h3>👋 您好，我是健康管理师小李</h3><p>接下来像拉家常一样，我问您二十多个小问题，几分钟就能帮您摸清肌肉状态。放心，没有对错，照实说就行。</p><div class="welcome-tags"><span>🩺 知识唤醒</span><span>💪 信念建立</span><span>🚶 行为启动</span></div>';
+  chatArea.appendChild(banner);
+  setTimeout(function(){flowIdx=0;askCurrent();},600);
+}
+function askCurrent(){
+  if(flowIdx<0||flowIdx>=FLOW.length)return;
+  var q=FLOW[flowIdx];
+  renderProgress();
+  aiSay(q.ask,null,650,q.hint);
+  if(q.multi)setQuickMulti(q);
+  else setQuick(q.opts.map(function(o){return o.t;}));
+  backBtn.style.display=S.history.length>0?'':'none';
+}
+/* 主输入处理 */
+function handleSend(text){
+  text=(text||'').trim();
+  if(!text)return;
+  if(S.pendingConfirm)return; /* 等弹窗确认中，忽略输入 */
+  if(S.pendingAgeConfirm){handleAgeConfirm(text);return;} /* 等年龄确认中 */
+  if(S.awaitingBodyFeel){handleBodyFeel(text);return;}
+  if(S.assessmentDone){postAssessment(text);return;} /* 筛查完进入知识问答模式 */
+  if(flowIdx<0)return;
+  var q=FLOW[flowIdx];
+  if(q.multi){handleMultiText(q,text);return;} /* 多选题走专门处理 */
+  /* 按钮:用户输入与按钮文字完全一致 → 直接收下,禁止"我没太听明白" */
+  var btnHit=null;
+  for(var bi=0;bi<q.opts.length;bi++){if(text===q.opts[bi].t){btnHit=q.opts[bi];break;}}
+  if(btnHit){
+    if(btnHit.v==='?'){proposeDefault(q);return;}
+    S[q.key]=btnHit;S.history.push(q.key);advance();return;
+  }
+  var parse=q.parse||function(t){return matchOpt(q.key,t);};
+  var opt=parse(text);
+  if(opt){
+    if(opt.rawAge!==undefined){ /* 纯数字年龄 → 先确认再收下，不受按钮区间限制 */
+      S.pendingAgeConfirm={age:opt.rawAge};
+      aiSay('您说的是'+opt.rawAge+'岁对吗？',null,600,'回复"对"或"不对"');
+      setQuick(['对','不对']);
+      return;
+    }
+    if(opt.incomplete){ /* 身高体重只说了一半 → 提示补全，不转问胖瘦 */
+      aiSay('麻烦您把身高和体重都说一下哦，比如"一米六，120斤"或"175，135斤"。',null,600,'两个数都告诉我');
+      return;
+    }
+    if(opt.v==='?'){proposeDefault(q);return;} /* 记不清→兜底默认值二次确认 */
+    S[q.key]=opt;S.history.push(q.key);
+    advance();
+  }else if(q.key==='body'){
+    if(/不知道|不清楚|没量过|没称过|没测过|忘了|记不清|不想说|没把握|说不清/.test(text)){
+      /* 无法提供/不愿意说 → 改问胖瘦 */
+      S.awaitingBodyFeel=true;
+      aiSay('没关系，那您觉得自己偏瘦还是偏胖？',null,650,'选一个就行');
+      setQuick(['偏瘦','不胖不瘦','偏胖','比较胖']);
+    }else{
+      /* 识别失败 → 提示把身高体重都说一下 */
+      aiSay('麻烦您把身高和体重都说一下哦，比如"一米六，120斤"或"175，135斤"。',null,600,'两个数都告诉我');
+    }
+  }else{
+    /* 没听懂 → 换个说法再问 */
+    aiSay('我没太听明白，您换个说法，或者点下面的按钮也行。',null,600,q.hint);
+    setQuick(q.opts.map(function(o){return o.t;}));
+  }
+}
+/* 胖瘦追问处理 */
+function handleBodyFeel(text){
+  var map={'偏瘦':'偏瘦','不胖不瘦':'不胖不瘦','偏胖':'偏胖','比较胖':'肥胖','瘦':'偏瘦','胖':'偏胖','正常':'不胖不瘦','标准':'不胖不瘦','中等':'不胖不瘦'};
+  var feel=null;
+  for(var k in map){if(text.indexOf(k)>=0){feel=map[k];break;}}
+  if(!feel){aiSay('您就说偏瘦、正常还是偏胖，选一个就行。',null,600);setQuick(['偏瘦','不胖不瘦','偏胖','比较胖']);return;}
+  S.awaitingBodyFeel=false;
+  S.body={v:feel,feel:feel,l:feel==='偏瘦'?2:0};
+  S.history.push('body');
+  advance();
+}
+/* 年龄数字确认处理：先问"您说的是XX岁对吗？"，确认后收下并继续流程 */
+var AGE_YES=['对','对的','是','是的','嗯','嗯嗯','行','好的','好','没错','可以','正确','对头','嗯行'];
+var AGE_NO=['不','不对','不是','不是的','错了','错','否','没有','不对的','不是这个','哪有','哪是'];
+function handleAgeConfirm(text){
+  var t=String(text||'').trim();
+  if(!t)return;
+  var i,no=false,yes=false;
+  for(i=0;i<AGE_NO.length;i++){if(t===AGE_NO[i]||t.indexOf(AGE_NO[i])===0){no=true;break;}}
+  if(!no)for(i=0;i<AGE_YES.length;i++){if(t===AGE_YES[i]||t.indexOf(AGE_YES[i])===0){yes=true;break;}}
+  if(no){ /* 否定 → 重新问年龄 */
+    S.pendingAgeConfirm=null;
+    aiSay('好，那您再说一遍您的岁数，说个大概数就行。',null,600);
+    setQuick(getQ('age').opts.map(function(o){return o.t;}));
+    return;
+  }
+  if(yes){ /* 肯定 → 收下年龄，继续推进问诊流程 */
+    var a=S.pendingAgeConfirm.age;S.pendingAgeConfirm=null;
+    S.age=ageOpt(a);S.history.push('age');
+    aiSay('好嘞，记住您'+a+'岁了，咱们继续。',null,500);
+    setTimeout(advance,1400);
+    return;
+  }
+  /* 说了新数字 → 当作新年龄重新确认 */
+  var m=t.match(/(\d{1,3})/);
+  if(m){var na=parseInt(m[1],10);if(na>=1&&na<=150){S.pendingAgeConfirm={age:na};aiSay('您说的是'+na+'岁对吗？',null,600,'回复"对"或"不对"');setQuick(['对','不对']);return;}}
+  /* 其他输入 → 再确认一遍 */
+  aiSay('您说的是'+S.pendingAgeConfirm.age+'岁对吗？回复"对"或"不对"就行。',null,600);
+  setQuick(['对','不对']);
+}
+/* 数字年龄 → 选项对象（映射区间保留兼容，显示保留原值） */
+function ageOpt(a){
+  var v=a<60?'<60':(a<65?'60~64':(a<70?'65~69':(a<80?'70~79':'80+')));
+  var l=a<60?0:(a<65?0:(a<70?1:(a<80?2:3)));
+  return {v:v,t:a+'岁',l:l,raw:a};
+}
+/* 推进到下一题 */
+function advance(){
+  flowIdx++;
+  if(flowIdx>=FLOW.length){finishAssessment();return;}
+  var q=FLOW[flowIdx];
+  var prevKey=S.history[S.history.length-1];
+  var prevPh=prevKey?getQ(prevKey).ph:0;
+  if(q.ph!==prevPh&&PHASE_BRIDGE[q.ph]){
+    aiSay(PHASE_BRIDGE[q.ph],null,600);
+    setTimeout(askCurrent,2000);
+  }else{
+    askCurrent();
+  }
+}
+/* 返回上一题修改 */
+function goBackPrev(){
+  if(S.assessmentDone){toast('筛查已完成，如需重做请回首页重新开始');return;}
+  if(S.awaitingBodyFeel){S.awaitingBodyFeel=false;flowIdx=FLOW.indexOf(getQ('body'));askCurrent();return;}
+  if(S.pendingAgeConfirm){S.pendingAgeConfirm=null;flowIdx=FLOW.indexOf(getQ('age'));askCurrent();return;}
+  if(S.history.length===0){toast('已经是第一题啦');return;}
+  var key=S.history.pop();
+  S[key]=null;
+  for(var i=0;i<FLOW.length;i++){if(FLOW[i].key===key){flowIdx=i;break;}}
+  aiSay('好的，咱们回到上一题，您重新回答就行：',null,500);
+  setTimeout(askCurrent,1600);
+}
+/* ==================== 兜底默认值 · 二次确认弹窗 ==================== */
+var DEFAULTS={
+ age:{v:'65~69',msg:'您记不清岁数没关系，我先按"65~69岁"帮您记着，行吗？'},
+ gender:{v:'男',msg:'没听清您是男同志还是女同志，我先按"男同志"记着，不对您随时改，行吗？'},
+ body:{v:'不胖不瘦',msg:'身高体重没说清也没事，我先按"不胖不瘦"帮您记着，行吗？'},
+ grip:{v:'g3',msg:'我先按"比较费劲"帮您记着，行吗？'},
+ gait:{v:'s3',msg:'我先按"有点赶"帮您记着，行吗？'},
+ chair:{v:'c2',msg:'我先按"偶尔要扶一下"记着，行吗？'},
+ stair:{v:'t2',msg:'我先按"有点喘但没问题"记着，行吗？'},
+ carry:{v:'y2',msg:'我先按"有点吃力"记着，行吗？'},
+ dietProtein:{v:'p3',msg:'我先按"隔两三天吃一次"记着，行吗？'},
+ teeth:{v:'h2',msg:'我先按"一般，硬的少吃"记着，行吗？'},
+ vegetarian:{v:'v1',msg:'我先按"不吃素"记着，行吗？'},
+ appetite:{v:'a2',msg:'我先按"还行"记着，行吗？'},
+ bowel:{v:'b2',msg:'我先按"偶尔便秘或拉肚子"记着，行吗？'},
+ walkOut:{v:'w3',msg:'我先按"一周出去一两次"记着，行吗？'},
+ housework:{v:'k2',msg:'我先按"经常做"记着，行吗？'},
+ exerciseFreq:{v:'e3',msg:'我先按"偶尔练练"记着，行吗？'},
+ taichi:{v:'q3',msg:'我先按"没练过，想学"记着，行吗？'},
+ sleep:{v:'z2',msg:'我先按"偶尔失眠"记着，行吗？'},
+ constitution:{v:'n',msg:'我先按"都没有"记着，行吗？'},
+ hp:{v:'不清楚',msg:'我先按"不清楚"记着，回头您量量血压告诉我，行吗？'},
+ diabetes:{v:'不清楚',msg:'我先按"不清楚"记着，回头您测测血糖告诉我，行吗？'},
+ kidney:{v:'不清楚',msg:'我先按"不清楚"记着，回头体检时查查，行吗？'},
+ joint:{v:'j2',msg:'我先按"偶尔疼"记着，行吗？'},
+ redline:{v:'none',msg:'您不太确定有没有这些情况，我先按"都没有"记着，回头体检时记得查查心脏和骨密度，行吗？'}
+};
+function proposeDefault(q){
+  var d=DEFAULTS[q.key];if(!d){advance();return;}
+  S.pendingConfirm={key:q.key,v:d.v};
+  confirmMsgEl.textContent=d.msg;
+  confirmModal.hidden=false;
+}
+function confirmDefault(ok){
+  confirmModal.hidden=true;
+  var pc=S.pendingConfirm;S.pendingConfirm=null;
+  if(!pc)return;
+  if(ok){
+    var opt=OPT(pc.key,pc.v);
+    if(!opt)opt={v:pc.v,l:0};
+    if(pc.key==='body')opt={v:'不胖不瘦',feel:'不胖不瘦',l:0};
+    if(pc.key==='redline')opt={v:[],t:'以上都没有',l:0};
+    S[pc.key]=opt;S.history.push(pc.key);
+    aiSay('好嘞，就这么记着了，咱们继续。',null,500);
+    setTimeout(advance,1400);
+  }else{
+    aiSay('没关系，您直接说，或者点下面的按钮也行。',null,500);
+    setTimeout(askCurrent,1400);
+  }
+}
+/* ==================== 风险评估 ==================== */
+/* 取某题风险等级（0正常 ~ 4严重） */
+function L(key){return S[key]?S[key].l:0;}
+function assessRisk(){
+  var abn=0,severe=0;
+  ['grip','gait','chair','stair','carry'].forEach(function(k){if(L(k)>=2)abn++;if(L(k)>=3)severe++;});
+  var chronic=['hp','diabetes','kidney'].filter(function(k){return S[k]&&/有/.test(S[k].t);}).length;
+  var old=S.age&&(S.age.v==='80+');
+  var poorDiet=L('dietProtein')>=2||L('teeth')>=2;
+  var noMove=L('walkOut')>=3||L('exerciseFreq')>=3;
+  if(abn>=3||severe>=2)return 'high';
+  if(abn===2)return (old||chronic>=2||severe>=1)?'high':'medium';
+  if(abn===1)return 'medium';
+  if(poorDiet&&noMove)return 'medium';
+  if(old||chronic>=2)return 'medium';
+  if(S.body&&S.body.feel==='偏瘦')return 'medium';
+  /* 红线情况提升风险等级（运动安全考虑） */
+  var rl=S.redline?S.redline.v:[];
+  if(rl.indexOf('heart')>=0&&abn>=1)return 'high';
+  if(rl.indexOf('fracture')>=0||rl.indexOf('osteo')>=0)return 'medium';
+  return 'low';
+}
+function finishAssessment(){
+  S.assessmentDone=true;
+  S.risk=assessRisk();
+  renderProgress();
+  backBtn.style.display='none';
+  aiSay('好嘞，问题都问完了！我帮您把情况捋一捋——',null,700);
+  setTimeout(showRiskResult,1900);
+}
+/* 风险结果卡片 */
+function showRiskResult(){
+  var r=S.risk;
+  var conf={high:{icon:'🔴',title:'高风险——肌肉减少的可能性较大',sub:'这是初步筛查结果，不是诊断。您先别紧张，咱们一步步来。'},
+   medium:{icon:'🟡',title:'中风险——肌肉状态需要留意',sub:'有些信号提示肌肉在悄悄流失，现在干预正当时。'},
+   low:{icon:'🟢',title:'低风险——肌肉状态保持得不错',sub:'底子好更要保持，咱们再加固一下。'}}[r];
+  var html='<div class="risk-card '+r+'">'
+    +'<div class="risk-title">'+conf.icon+' '+conf.title+'</div>'
+    +'<div class="risk-sub">'+conf.sub+'</div>'
+    +'<div class="risk-items">'+buildRiskItems()+'</div>'
+    +'<div class="risk-advice">'+buildRiskAdvice(r)+'</div>'
+    +'<button class="goto-care" onclick="showCareFromScreen()">📋 查看我的个性化干预方案 →</button>'
+    +'</div>';
+  addMsg('这是您的初筛情况汇总：','ai',html,'点下方按钮直达干预方案，或继续问我问题');
+  setQuick(KB_QUICK);
+}
+/* 汇总各项情况 */
+function buildRiskItems(){
+  var rows=[];
+  rows.push('👤 年龄：'+(S.age?S.age.t:'未提供')+(S.gender?' · '+S.gender.t:''));
+  if(S.body)rows.push('⚖️ 体型：'+(S.body.v||S.body.feel));
+  rows.push('✊ 握力（拧毛巾）：'+(S.grip?S.grip.t:'未提供'));
+  rows.push('🚶 步速（过马路）：'+(S.gait?S.gait.t:'未提供'));
+  rows.push('🪑 椅子起立：'+(S.chair?S.chair.t:'未提供'));
+  rows.push('🪜 爬两层楼：'+(S.stair?S.stair.t:'未提供'));
+  rows.push('🛢️ 拎5斤油：'+(S.carry?S.carry.t:'未提供'));
+  rows.push('🥩 蛋白食物：'+(S.dietProtein?S.dietProtein.t:'未提供'));
+  rows.push('🏃 出门锻炼：'+(S.walkOut?S.walkOut.t:'未提供')+(S.exerciseFreq?' · '+S.exerciseFreq.t:''));
+  var chronic=[];
+  ['hp','diabetes','kidney','joint'].forEach(function(k){if(S[k]&&/有|疼/.test(S[k].t))chronic.push(S[k].t);});
+  if(chronic.length)rows.push('🏥 慢性情况：'+chronic.join('、'));
+  if(S.redline&&S.redline.t&&S.redline.t!=='以上都没有')rows.push('🚨 红线情况：'+S.redline.t);
+  return rows.map(function(x){return '<div>'+x+'</div>';}).join('');
+}
+/* 风险对应建议 */
+function buildRiskAdvice(r){
+  var a=[];
+  if(r==='high'){a.push('⚠️ 您属于高风险，强烈建议尽快到正规医院老年科或营养科就诊，做握力计、步速、人体成分等专业检查。本筛查不能替代医生诊断。');}
+  else if(r==='medium'){a.push('建议3~6个月后复查一次握力和步速，看看变化趋势；有条件也可以去医院做进一步评估。');}
+  else{a.push('建议每年自查一次，好习惯保持住，肌肉就稳得住。');}
+  if(L('dietProtein')>=2)a.push('蛋白质吃得偏少，肌肉缺"砖头"——三餐都要加点肉蛋奶豆。');
+  if(L('grip')>=3||L('chair')>=3)a.push('力气下降明显，锻炼从最轻的坐姿动作开始，别着急。');
+  if(S.joint&&L('joint')>=3)a.push('关节疼痛明显，运动前建议先看骨科，避免加重损伤。');
+  if(S.hp&&S.hp.v==='有控制差')a.push('血压波动大，运动前先量量血压，太高就先歇着。');
+  var rl=S.redline?S.redline.v:[];
+  if(rl.indexOf('heart')>=0)a.push('您有冠心病/心衰史，运动方案务必先请心内科医生评估，切勿自行开始锻炼。');
+  if(rl.indexOf('fracture')>=0)a.push('近期骨折需骨科医生确认愈合情况后，再开始任何运动。');
+  if(rl.indexOf('osteo')>=0)a.push('严重骨质疏松者防跌倒是第一位，运动前请咨询医生。');
+  return a.join('\n');
+}
+/* ==================== 干预板块 ==================== */
+/* 入口弹窗：二选一 */
+function openCare(){
+  careModal.hidden=false;
+  document.getElementById('modal-step1').hidden=false;
+  document.getElementById('modal-step2').hidden=true;
+}
+function carePickKnown(){
+  document.getElementById('modal-step1').hidden=true;
+  document.getElementById('modal-step2').hidden=false;
+}
+function carePickScreen(){
+  careModal.hidden=true;
+  if(S.assessmentDone){showView('view-screen');toast('您的筛查结果还在，往下翻就能看到方案入口');}
+  else{startScreen();}
+}
+function careLevel(level){careModal.hidden=true;buildCarePlan(null,level);}
+function showCareFromScreen(){if(!S.assessmentDone)return;buildCarePlan(S.risk,null);}
+/* 生成完整干预方案页 */
+/* 客观等级：从筛查的握力、步速、起立等指标映射到4档（good/fair/poor/bad） */
+function objTier(){
+  if(!S.assessmentDone||!S.risk)return null;
+  var abn=0,severe=0;
+  ['grip','gait','chair','stair','carry'].forEach(function(k){if(L(k)>=2)abn++;if(L(k)>=3)severe++;});
+  if(severe>=2||(abn>=3&&S.age&&S.age.v==='80+'))return 'bad';
+  if(S.risk==='high')return 'poor';
+  if(S.risk==='medium')return 'fair';
+  return 'good';
+}
+function buildCarePlan(risk,selfReport){
+  var ot=objTier(); /* 客观等级 */
+  var rank={good:1,fair:2,poor:3,bad:4};
+  var st=selfReport||null;
+  var tier=ot||st||'fair'; /* 都没有时按一般档 */
+  if(ot&&st&&rank[ot]>rank[st])tier=ot; /* 客观与自评冲突 → 优先客观（取更严峻档） */
+  showView('view-care');
+  var body=document.getElementById('care-body');
+  var tierTalk={good:'底子保持得不错！这套方案帮您维持肌肉、预防下降，照着做就能稳住好状态。',
+   fair:'现在调整正当时！这套方案帮您及时补上营养、动起来，防止肌肉继续流失。',
+   poor:'别担心，咱们温和来。这套方案以好消化的营养和安全的坐姿锻炼为主，先把肌肉稳住。',
+   bad:'咱们以休养和易消化的营养为主。强烈建议您抽空去医院老年科或营养科做一次线下评估，在医生指导下慢慢恢复。'}[tier];
+  var greet;
+  if(st){
+    var cn={good:'良好',fair:'一般',poor:'较差',bad:'很差'}[st];
+    if(ot&&rank[ot]>rank[st])greet='您觉得自己肌肉情况"'+cn+'"，不过从刚才筛查的握力、步速等客观指标看，情况要更严峻一些——我按客观结果给您定了这套更稳妥的方案：'+tierTalk;
+    else if(ot&&rank[ot]<rank[st])greet='从刚才筛查的握力、步速等客观指标看，您的情况保持得还可以；不过您觉得自己状态"'+cn+'"，这套方案我按客观结果给您定，同时建议您多留意身体变化，有不舒服及时就医：'+tierTalk;
+    else greet='您觉得自己肌肉情况"'+cn+'"，我按这个给您定制：'+tierTalk;
+  }else{
+    greet='根据您刚才的筛查结果，我给您定制了这套方案：'+tierTalk;
+  }
+  var html='<div class="care-welcome"><h2>🍊 您的个性化干预方案</h2><p>'+greet+'</p></div>';
+  html+=buildEatCard(tier);
+  html+=buildMoveCard(tier);
+  html+=buildAltCard();
+  if(tier==='bad')html+='<div class="care-note">⚠️ 您目前肌肉情况很差，强烈建议先到医院老年科或营养科做专业评估；如果胃口差、吃不下饭，请优先就医排查原因。在医生确认安全前，只做上面的极轻活动，禁止任何费力锻炼。</div>';
+  else if(tier==='poor')html+='<div class="care-note">⚠️ 您目前肌肉情况偏差，建议到医院老年科或营养科做一次专业评估，在医生确认安全后再逐步增加运动量。运动中如出现胸闷、头晕、关节疼痛，请立即停止并就医。</div>';
+  else if(tier==='fair')html+='<div class="care-note">💡 现在调整正当时：建议3~6个月后复查一次握力和步速，看看变化趋势。若您患有心衰、不稳定心绞痛、近期骨折或严重骨质疏松，请先咨询医生再开始锻炼；运动中如出现胸闷、头晕、关节疼痛，请立即停止并就医。</div>';
+  else html+='<div class="care-note">💡 您底子不错，重在预防流失：保持三餐有蛋白、每周练2次力量、每天走一走，肌肉就能稳住。建议每年自查一次握力和步速。若您患有心衰、不稳定心绞痛、近期骨折或严重骨质疏松，请先咨询医生再开始锻炼。</div>';
+  html+='<div class="care-note" style="background:var(--bg);border-color:var(--border);color:var(--text-light);"><strong>📖 权威指南来源：</strong>本方案依据 AWGS 2019 共识、2024 中国专家共识、2026 国家卫健委食养指南生成。<br><strong>⚠️ 医疗免责声明：</strong>本工具仅提供科普与生活方式指导，不能替代医生诊疗。如出现胸闷、头晕请立即停止并就医。</div>';
+  body.innerHTML=html;
+  body.scrollTop=0;
+}
+/* 卡片一：每日怎么吃（早中晚食谱+分量+现代营养+中医食养） */
+function meal(tag,text,tip){
+  return '<div class="meal-row"><span class="meal-tag">'+tag+'</span><div class="meal-text">'+text+'</div>'+(tip?'<div class="meal-tip">💡 '+tip+'</div>':'')+'</div>';
+}
+function buildEatCard(tier){
+  var rows='';
+  if(tier==='good'){
+    rows+=meal('早餐','小米山药粥1碗 + 水煮蛋1个 + 牛奶1杯（约250ml）','山药健脾养胃；1个鸡蛋约含7克蛋白质');
+    rows+=meal('午餐','米饭1碗 + 清蒸鱼1块（手掌大）+ 炒青菜1盘','鱼肉好嚼好消化，100克鱼肉约含18克蛋白质');
+    rows+=meal('晚餐','杂粮粥1碗 + 豆腐1块 + 番茄炒蛋','豆腐是植物蛋白冠军，100克约含8克蛋白质');
+    rows+=meal('加餐','下午：酸奶1杯 + 核桃2个（可选）','蛋白质均匀分到三餐，肌肉才吸收得好');
+  }else if(tier==='fair'){
+    rows+=meal('早餐','牛奶1杯 + 水煮蛋1个 + 全麦馒头1个','早餐就把蛋白补上，一天才有精神');
+    rows+=meal('午餐','米饭1碗 + 瘦肉或鱼1块（手掌大）+ 炒青菜','每餐都要有肉蛋奶豆，蛋白不能集中在一顿');
+    rows+=meal('晚餐','杂粮饭1碗 + 豆腐1块 + 青菜炒蛋','晚餐也保证一份优质蛋白');
+    rows+=meal('加餐','下午：酸奶1杯 + 坚果一小把','把蛋白分到三餐+加餐，吸收更好');
+  }else if(tier==='poor'){
+    rows+=meal('早餐','鸡蛋羹1碗 + 牛奶或豆浆1杯 + 软花卷半个','蛋羹好消化，蛋白质一点不少');
+    rows+=meal('午餐','软烂米饭 + 鱼泥或肉丸1份 + 炖软的青菜','鱼泥、肉丸比整块肉好嚼，优质蛋白好吸收');
+    rows+=meal('晚餐','烂面条1碗 + 豆腐1块 + 蒸蛋','细嚼慢咽，每口嚼20下，消化好吸收才好');
+    rows+=meal('加餐','上午、下午各加一次：酸奶、蛋羹或豆腐脑，每次少量','少食多餐，一天4~5顿，每顿吃几口也行');
+  }else{ /* bad */
+    rows+=meal('早餐','鸡蛋羹1碗 + 酸奶半杯','蛋羹软滑好吞咽，酸奶比牛奶更好消化');
+    rows+=meal('午餐','鱼泥粥或肉末烂粥1碗 + 嫩豆腐几块','鱼泥、肉末炖进粥里，不用嚼也能吃下');
+    rows+=meal('晚餐','软烂面条 + 蒸蛋 + 嫩豆腐','软烂为主，吃得下比吃得多重要');
+    rows+=meal('加餐','少量多餐：酸奶、蛋羹、豆腐脑、蒸南瓜，每次小半碗','一天5~6顿，每顿少量，别硬撑');
+  }
+  var tips=[{good:'您状态不错，维持常规均衡饮食即可：每天蛋白质每公斤体重1.0~1.2克，三餐均匀，不用大量加餐。',
+   fair:'适当提高蛋白质：每公斤体重1.2~1.5克，每餐保证20~30克。三餐都要有肉蛋奶豆，别靠一顿补。',
+   poor:'优先选好消化的优质蛋白：蛋羹、鱼泥、肉丸、豆腐、酸奶。少食多餐（一天4~5顿），细嚼慢咽，让每口营养都吸收到位。',
+   bad:'只吃软烂高蛋白：蛋羹、鱼泥、嫩豆腐、酸奶。少量多餐（一天5~6顿，每次小半碗）。胃口差、吃不下时优先就医排查，别硬扛。'}[tier]];
+  if(L('teeth')>=2)tips.push('您牙口不好：鸡蛋做成蛋羹，肉剁碎做成肉丸，鱼挑没刺的鱼柳，豆腐蛋羹当主力。');
+  if(S.vegetarian&&/长期|经常/.test(S.vegetarian.t))tips.push('您吃素：黄豆+谷物搭配（豆浆配馒头），蛋白不输肉；多吃豆腐、腐竹、豆浆、芝麻酱。');
+  if(L('appetite')>=2)tips.push('您胃口小：少量多餐，一天4~5顿，每顿吃几口也行，别硬撑。');
+  if(S.constitution&&(S.constitution.v==='cold'||S.constitution.v==='both'))tips.push('您怕冷：早上喝杯姜枣茶（生姜2片+红枣3颗），冬天来碗羊肉萝卜汤，暖身又养肌肉。');
+  if(S.constitution&&(S.constitution.v==='dry'||S.constitution.v==='both'))tips.push('您口干：下午加一碗百合银耳羹，滋阴润燥。');
+  if(S.diabetes&&/有/.test(S.diabetes.t))tips.push('您有糖尿病：白粥少喝，主食换杂粮饭，餐后半小时散散步，既稳血糖又保肌肉。');
+  if(S.kidney&&/有/.test(S.kidney.t))tips.push('您肾脏不好：蛋白质吃多少要听肾内科医生的，千万别自己加蛋白粉。');
+  if(S.hp&&/有/.test(S.hp.t))tips.push('您有高血压：每天盐不超过5克（一啤酒瓶盖），多吃芹菜、木耳。');
+  if(L('dietProtein')>=3)tips.push('您蛋白质吃得太少：从今天起，每餐先吃一口肉蛋奶豆，把"砖头"补上。');
+  var rlE=S.redline?S.redline.v:[];
+  if(rlE.indexOf('osteo')>=0)tips.push('您有骨质疏松：每天1杯牛奶+1个鸡蛋补钙质，晒太阳15~30分钟补维D，帮骨头和肌肉都稳住。');
+  if(rlE.indexOf('fracture')>=0)tips.push('骨折恢复期：多喝牛奶、吃鱼虾豆腐，钙和蛋白质都得跟上，骨头才长得快。');
+  return '<div class="care-card eat"><h3>🍽 每日怎么吃</h3>'+rows+'<div class="care-tip"><ul class="care-list">'+tips.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul></div></div>';
+}
+/* 卡片二：每天怎么动（动作+次数组数频次+现代抗阻+八段锦导引） */
+function buildMoveCard(tier){
+  var rows='';
+  if(tier==='good'){
+    rows+=meal('早上','八段锦1遍（约15分钟）','舒展筋骨、调理气血，老祖宗传下来的养身功法');
+    rows+=meal('隔天·上午','弹力带抗阻：坐姿抬腿10次×3组 + 弹力带弯举10次×3组','中等强度，弹力带比水瓶进阶，练大腿和胳膊');
+    rows+=meal('每天','散步30分钟','走到微微出汗、还能正常说话的程度');
+    rows+=meal('每周3次','扶椅单脚站：每侧10秒×3次','防跌倒必练，平衡是老年人的"保命功夫"');
+  }else if(tier==='fair'){
+    rows+=meal('早上','八段锦1遍（约15分钟）','先学3式：两手托天理三焦、调理脾胃须单举、双手攀足固肾腰');
+    rows+=meal('隔天·上午','坐姿抬腿：每条腿10次×3组，组间休息1分钟','坐稳椅子，腿伸直抬平停3秒再慢慢放下——练大腿，护膝盖');
+    rows+=meal('隔天·下午','矿泉水瓶弯举：每手10次×3组（500ml水瓶起步）','手握水瓶慢慢弯起再放下——练胳膊，拧毛巾更有劲');
+    rows+=meal('每天','散步20~30分钟','避免久躺久坐，每坐1小时起来活动5分钟');
+    rows+=meal('每周3次','扶椅单脚站：每侧10秒×3次','防跌倒必练');
+  }else if(tier==='poor'){
+    rows+=meal('每天早上','坐姿八段锦（坐着练）1遍','动作放慢，坐稳再练，站不稳的动作不用勉强');
+    rows+=meal('隔天','坐姿抬腿：每条腿5次×2组（减半起步）','坐稳椅子慢慢抬，不着急，适应2周再慢慢加');
+    rows+=meal('隔天','坐姿水瓶弯举：每手5次×2组（300ml小瓶）','用小瓶轻一点，安全第一');
+    rows+=meal('每天','扶椅起坐：5~8次','手扶稳椅背再站起，练腿力同时防跌倒');
+    rows+=meal('注意','减少长时间站立和久走，不做负重（不拎重物、不深蹲）','重点防跌倒：起身慢一点，走动扶稳东西');
+  }else{ /* bad */
+    rows+=meal('每天','床上踝泵运动：脚尖上下勾20次×2组','躺着就能做，促进血液循环，防止肌肉继续萎缩');
+    rows+=meal('每天','坐位抬腿：每条腿3~5次×1组','能做几个做几个，不勉强');
+    rows+=meal('每天','扶椅站立几秒：3~5次','手扶稳再站，站不住就坐回去，安全第一');
+    rows+=meal('注意','禁止任何费力抗阻训练，不拎重物、不久站久走','重点防摔倒、防疲劳：动一动就歇，累就停');
+  }
+  var tips=[{good:'中等强度，抗阻每周2~3次、隔天进行。您底子不错，4周后可加到3组或换更粗弹力带，肌肉才继续长。',
+   fair:'低-中等强度，增加日常抗阻练习。别久躺久坐——坐着看电视时也可以顺便抬抬腿。',
+   poor:'以坐姿安全训练为主，起步减半，适应2周再慢慢加。重点防跌倒：家里清障、穿防滑鞋、起身慢一点。',
+   bad:'只做床上/坐姿极轻活动，禁止任何费力抗阻。以休养为主，重点防摔倒、防疲劳，强烈建议先线下就诊评估，在医生指导下再逐步增加活动。'}[tier]];
+  if(S.joint&&L('joint')>=2)tips.push('您膝盖疼：不蹲不跪，坐姿抬腿是主打动作；靠墙静蹲等膝盖好转再练。');
+  if(L('walkOut')>=3)tips.push('您出门少：全部安排在室内，客厅来回走20分钟一样管用。');
+  if(S.hp&&/有/.test(S.hp.t))tips.push('您有高血压：动作放缓，千万别憋气，练时保持正常呼吸。');
+  if(S.diabetes&&/有/.test(S.diabetes.t))tips.push('您有糖尿病：餐后散步特别适合您，别空腹练。');
+  if(S.age&&S.age.v==='80+')tips.push('您80岁以上：每个动作先做1组，站稳扶好再练，循序渐进最要紧。');
+  if(S.taichi&&S.taichi.v==='q3')tips.push('八段锦不难：先跟着视频学"两手托天"1式，3天就能学会，慢慢加。');
+  var rl=S.redline?S.redline.v:[];
+  var redWarn='';
+  if(rl.indexOf('heart')>=0)redWarn+='<div class="red-warn">⚠️ 红色警告：您有冠心病/心衰，运动前必须咨询心内科医生！<br>运动中出现胸闷、胸痛、头晕、气短，请立即停止并拨打120。</div>';
+  if(rl.indexOf('fracture')>=0)redWarn+='<div class="red-warn">⚠️ 您近期有骨折，骨折部位未愈合前不做负重训练，所有动作需经骨科医生确认。</div>';
+  if(rl.indexOf('osteo')>=0)redWarn+='<div class="red-warn">⚠️ 您有严重骨质疏松，防跌倒是第一位：动作放慢、扶稳再练，避免弯腰扭转等危险动作。</div>';
+  return '<div class="care-card move"><h3>🦵 每天怎么动</h3>'+redWarn+rows+'<div class="care-tip"><ul class="care-list">'+tips.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul></div></div>';
+}
+/* 卡片三：遇到困难的替代方案 */
+function alt(icon,from,to){
+  return '<div class="alt-item"><span class="alt-icon">'+icon+'</span><span><span class="alt-from">'+from+'</span><br>→ <span class="alt-to">'+to+'</span></span></div>';
+}
+function buildAltCard(){
+  var items=[];
+  if(S.joint&&L('joint')>=2)items.push(alt('🦵','膝盖疼不能蹲','改做坐姿抬腿，膝盖完全不受力，一样练大腿'));
+  if(L('teeth')>=2)items.push(alt('🦷','牙口不好嚼不动肉','换豆腐、鸡蛋羹、鱼丸、肉末，蛋白质一点不少'));
+  if(L('walkOut')>=3)items.push(alt('🏠','出门不方便','全部改室内：客厅散步+八段锦，下雨天也不耽误'));
+  items.push(alt('⏰','没整块时间','看电视广告时间练2分钟也管用，积少成多'));
+  items.push(alt('😰','怕摔不敢动','扶稳椅背再练，地上铺防滑垫，家人陪着更放心'));
+  items.push(alt('🥛','喝牛奶拉肚子','换酸奶或舒化奶，一样补蛋白，还更好消化'));
+  if(L('appetite')>=2)items.push(alt('🍚','胃口小吃不多','少量多餐，加餐喝杯酸奶、吃个蛋羹，几口也是营养'));
+  items.push(alt('💪','练完肌肉酸','轻微酸痛正常，歇1~2天就好；疼得厉害就停，别硬撑'));
+  var rlA=S.redline?S.redline.v:[];
+  if(rlA.indexOf('heart')>=0)items.push(alt('❤️','有心脏病不敢动','先问心内科医生能做什么运动，从最轻的散步开始，千万别憋气'));
+  if(rlA.indexOf('fracture')>=0)items.push(alt('🩹','骨折还没好利索','骨折侧先不动，健康侧照常练；具体听骨科医生的'));
+  if(rlA.indexOf('osteo')>=0)items.push(alt('🦴','骨质疏松怕骨折','不做跳跃和扭转动作，练坐姿抬腿最安全，家里铺防滑垫'));
+  return '<div class="care-card alt"><h3>📌 遇到困难的替代方案</h3>'+items.join('')+'</div>';
+}
+/* ==================== 知识库（口语化科普） ==================== */
+var KB=[
+{k:['肌少症','肌肉减少','什么是肌少','肌肉流失'],a:'肌少症说白了就是"肌肉变少了、力气变小了"。它不是小毛病——肌肉一少，走路没劲、容易摔跤、抵抗力也跟着掉。\n好消息是：肌肉是"用进废退"的，只要吃得对、动得巧，多大岁数都能往回练！'},
+{k:['症状','表现','怎么知道','什么感觉','征兆','信号'],a:'肌少症爱"偷偷来"，这几个信号要留心：\n①拧毛巾、拧瓶盖费劲\n②过马路赶不上绿灯\n③从椅子上站起来要扶\n④近一年裤子变松、体重轻了\n⑤没特意减肥却瘦了\n占两条以上，就该查查了。'},
+{k:['握力','手劲','攥','拧毛巾','拧瓶盖'],a:'握力是测肌肉的"金标准"之一。医院用握力计：男同志低于28公斤、女同志低于18公斤就算偏低。\n在家可以自测：拧干湿毛巾，如果很费劲，提示握力可能下降了。'},
+{k:['步速','走路慢','过马路','走不快','0.8'],a:'步速也是重要指标。医院量您走6米的时间，低于0.8米/秒（明显比常人慢一截）就提示风险。\n在家看"过马路"：绿灯期间过不去，就说明步子偏慢了。'},
+{k:['原因','为什么','怎么会得','为何'],a:'肌肉变少常见五个原因：\n①岁数大了，肌肉自然流失（30岁后每10年约掉3~8%）\n②吃得少，尤其蛋白质不够\n③活动少，久坐不动\n④慢病消耗（糖尿病、肾病等）\n⑤维D缺乏、内分泌变化\n前三条咱们自己就能改善！'},
+{k:['吃什么','蛋白质','营养','食补','怎么吃','食谱'],a:'养肌肉，蛋白质是"砖头"：\n①量要够：每公斤体重每天1.2~1.5克（60公斤的人约72~90克）\n②分着吃：三餐均匀，每餐20~30克，别一顿全吃\n③好来源：鸡蛋、牛奶、鱼虾、瘦肉、豆腐\n④别光喝汤：汤里营养不多，肉和蛋才是真营养'},
+{k:['维生素d','维d','晒太阳','骨质疏松','补钙'],a:'维D是肌肉的"帮手"，帮钙吸收、帮肌肉发力。\n最简单的办法：每天户外晒太阳15~30分钟（露出胳膊和脸，隔着玻璃没用）。\n如果查出来维D偏低，要在医生指导下补充，别自己乱吃。'},
+{k:['怎么练','运动','锻炼','抗阻','力量训练','做什么运动'],a:'练肌肉记住三句话：\n①抗阻为主：坐姿抬腿、矿泉水瓶弯举、推墙俯卧撑，每周2~3次，隔天练\n②有氧辅助：每天散步20~30分钟\n③平衡防摔：扶椅单脚站\n记住"练到微微费力但能坚持"就行，别练到疼。'},
+{k:['八段锦','太极','导引','功法','传统运动'],a:'八段锦是老祖宗传下来的导引功法，特别适合中国老年人：动作柔和、不受场地限制、一套才15分钟。\n现代研究也发现它对平衡力、柔韧性、气血循环都有好处。建议每天练1遍，先从"两手托天理三焦"学起。'},
+{k:['吃素','素食','不吃肉','清淡'],a:'很多叔叔阿姨以为"清淡=只吃素"，其实这是误区！清淡是少油少盐，不是不吃肉。\n长期吃素蛋白质容易不够，肌肉掉得快。如果吃素，一定要多吃豆腐、腐竹、豆浆、鸡蛋、牛奶，把蛋白补上。'},
+{k:['误区','千金难买老来瘦','老了瘦好','越瘦越好'],a:'"千金难买老来瘦"这句老话得改改了——老了太瘦反而危险！\n肌肉少了，摔一跤可能就是骨折，抵抗力也差。老年人的健康体型是"微胖最好"，身上有点肌肉，才是真本钱。'}
+,
+{k:['摔跤','摔倒','跌倒','怕摔','平衡'],a:'防摔是老年人的头等大事：\n①练平衡：手扶椅背单脚站，每侧10秒×3次\n②慢起慢坐：起床、起立先停3秒再走\n③家里清障：电线、地毯边、小凳子都收好\n④穿防滑鞋，雨天别出门\n⑤肌肉练起来，腿有劲自然站得稳。'},
+{k:['便秘','大便干','拉不出'],a:'便秘和肌肉也有关系——腹肌无力、活动少、粗纤维不够都容易便秘。\n建议：多喝水、多吃蔬菜和粗粮、每天饭后散步20分钟、顺时针揉肚子100下。常年便秘要问问消化科医生。'},
+{k:['失眠','睡不好','睡眠','睡不着'],a:'睡觉时肌肉在"修修补补"，睡不好肌肉长不回来。\n建议：晚上11点前睡、午休别超半小时、睡前热水泡脚、下午以后别喝茶。长期严重失眠要去医院睡眠门诊看看。'},
+{k:['糖尿病','血糖'],a:'糖尿病和肌少症是"难兄难弟"——血糖高会加速肌肉分解。\n建议：餐后半小时散步20分钟（既降糖又保肌肉）、主食换杂粮、蛋白质别减。血糖控制好了，肌肉才留得住。'},
+{k:['高血压','血压'],a:'高血压不影响练肌肉，但要注意：\n①运动前量量血压，超过160/100先歇着\n②练时别憋气，动作放缓\n③少吃盐（每天不超过5克）\n④降压药按时吃，别自己停。'},
+{k:['肾病','肾脏','肾炎','肾衰'],a:'肾脏不好的人，蛋白质吃多少很有讲究——吃多了加重肾脏负担，吃少了肌肉掉得快。\n一定要听肾内科医生的个体化建议，千万别自己买蛋白粉加餐。'},
+{k:['检查','确诊','怎么查','治疗','去医院','看什么科'],a:'怀疑肌少症，去医院挂"老年科"或"营养科"，做三个检查：\n①握力计测握力\n②计时测步速\n③人体成分仪测肌肉量\n确诊后医生会给出营养+运动处方。记住：早发现、早干预，效果最好。'},
+{k:['药','蛋白粉','肌酸','保健品','吃什么药','开药'],a:'先说明：我是健康管理师，不是医师，开药这事儿得听医生的，我不能开任何药方。\n一般不建议老人自己买蛋白粉、肌酸，吃多了肾脏受不了。肉蛋奶豆吃够了，蛋白质就不缺。确实需要补充的，让医生评估后再定。'},
+{k:['多久','见效','有效','什么时候好','要多久'],a:'肌肉是"慢工出细活"：\n①2周左右：感觉力气好一点、精神好一点\n②4~8周：拧毛巾、起立明显轻松\n③3个月：握力、步速能测出改善\n关键是坚持——三天打鱼两天晒网，肌肉可不长。'},
+{k:['预防','年轻人','几岁开始','还年轻'],a:'肌肉从30岁就开始悄悄流失了，预防越早越好！\n不管您现在多大：每餐有蛋白、每周练2次力量、每天走一走，肌肉就能稳住。今天开始，就是最好的时机。'},
+{k:['胖瘦','bmi','体重','偏瘦','太瘦'],a:'老年人太瘦不是好事——体重指数BMI低于18.5（体重公斤÷身高米²）就偏瘦了，肌肉和抵抗力都受影响。\n偏瘦的叔叔阿姨要加餐：上午下午各加一顿，酸奶、蛋羹、坚果轮着来，把体重慢慢养回来。'}
+];
+/* 知识库匹配：按命中关键词总长度计分，取最高分 */
+function kbMatch(text){
+  var best=null,bs=0;
+  KB.forEach(function(item){
+    var s=0;
+    item.keys.forEach(function(k){if(text.indexOf(k)>=0)s+=k.length;});
+    if(s>bs){bs=s;best=item;}
+  });
+  return bs>0?best:null;
+}
+/* 筛查后的快捷追问 */
+var KB_QUICK=['肌少症是什么？','吃什么养肌肉？','怎么练有效？','防摔有什么招？','多久能见效？'];
+/* ==================== 知信行话术库（信念建立/情绪疏导） ==================== */
+var T={
+ reluctance:'特别理解您！很多叔叔阿姨一开始都觉得"练不动"。咱们不求多，从最小的开始：\n坐姿抬腿，每条腿就做5次，坐着看电视就能练，一点不累。\n今天试一次，明天您就想做第二次了——肌肉是越练越想练的。',
+ sothe:'您别太担心，有这份心就已经赢了一半！肌少症不是绝症，它是能往回练的。您看我给您定的方案，都是坐着、扶着就能做的安全动作。咱们一步一步来，我陪着您。',
+ drugRefuse:'这个我得跟您说清楚：我是健康管理师，不是医师，开药这事儿必须听医生的，我不能给您开任何药方。\n不过吃的东西我能聊：肉蛋奶豆就是最好的"天然补品"，吃对了比啥都强。要是身体不舒服，一定要去医院看。'
+};
+/* ==================== 筛查后自由问答 ==================== */
+function postAssessment(text){
+  /* 畏难情绪 → 信念建立 */
+  if(/不想练|练不了|做不到|太难|没时间|坚持不了|懒得|动不了/.test(text)){aiSay(T.reluctance,null,700,'咱们从最小的动作开始');setQuick(KB_QUICK);return;}
+  /* 负面情绪 → 安抚疏导 */
+  if(/害怕|担心|焦虑|没信心|绝望|完了|吓|愁/.test(text)){aiSay(T.sothe,null,700);setQuick(KB_QUICK);return;}
+  /* 索要药物/药方 → 明确拒绝并引导就医 */
+  if(/开药|开点|药方|给我开|吃什么药/.test(text)){aiSay(T.drugRefuse,null,700);setQuick(KB_QUICK);return;}
+  /* 想看方案 */
+  if(/方案|计划|干预|怎么吃|怎么练|食谱|锻炼计划/.test(text)){aiSay('好嘞，我这就把您的个性化方案调出来：',null,600);setTimeout(showCareFromScreen,1500);return;}
+  /* 知识库匹配（含重复记忆：刚聊过的问题只简答） */
+  var hit=kbMatch(text);
+  if(hit){
+    if(S.lastKB===hit){aiSay('这个咱们刚才聊过啦，我再简单说一遍：\n'+hit.a.split('\n').slice(0,2).join('\n'),null,700,'还想问啥随时说');setQuick(KB_QUICK);return;}
+    S.lastKB=hit;
+    aiSay(hit.a,null,800,'还有想问的随时说');
+    setQuick(KB_QUICK);
+    return;
+  }
+  /* 跑题拉回 */
+  S.offTopic=(S.offTopic||0)+1;
+  if(S.offTopic>=3){aiSay('咱们聊得挺开心，不过我更惦记您的肌肉😄。您想了解吃什么、怎么练，还是看看您的干预方案？',null,700);S.offTopic=0;setQuick(KB_QUICK);return;}
+  aiSay('这个我还真不太在行，我更擅长聊肌肉健康😄。您想了解肌少症、怎么吃、怎么练，还是让我帮您看看方案？',null,700);
+  setQuick(KB_QUICK);
+}
+/* ==================== 初始化 ==================== */
+showView('view-home');
+</script>
+</body>
+</html>
